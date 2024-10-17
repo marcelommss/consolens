@@ -2,15 +2,19 @@
 
 **Consolens** is a customizable logging package for JavaScript/TypeScript projects that enhances console logging with structured messages, auto-tagging, contextual information, and custom icons. It provides advanced features like development-only logs, styled headers, and middleware for intercepting default console logs.
 
+![consolens example](https://github.com/marcelommss/consolens/blob/main/consolensexample.png?raw=true)
+
 ## Features
 
-- 📊 **Development-only logging**: Ensure logs only appear in development environments.
-- 🎨 **Customizable output**: Modify colors, tags, and formatting for logs.
-- 🔖 **Tagging**: Auto-tag logs with colors for easy identification.
-- 🔗 **Middleware interception**: Automatically intercept and handle `console.log`, `console.warn`, and `console.error` calls.
-- 📝 **Formatted headers**: Create structured, styled log headers for readability.
-- 💡 **Full TypeScript support**: Leverage powerful type definitions with rich autocompletion and documentation.
-- 🚀 **Non-intrusive**: Bypass middleware interception for specific logs, such as styled headers.
+- **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
+- **Improved console UI**: Massivelly improves the readability of your logs with a much cleanner, space UI.
+- **Customizable output**: Modify colors, tags, and formatting for logs.
+- **Development logging**: Choose which logs are going to appear only in  development environments.
+- **Tagging**: Auto-tag logs with colors for easy identification.
+- **Formatted headers**: Create structured, styled log headers for readability.
+- **Full TypeScript support**: Leverage powerful type definitions with rich autocompletion and documentation.
+- **Middleware interception**: Automatically intercept and handle `console.log`, `console.warn`, and `console.error` calls.
+- **Non-intrusive**: Bypass middleware interception for specific logs, such as styled headers.
 
 ---
 
