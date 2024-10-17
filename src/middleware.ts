@@ -7,7 +7,11 @@ let originalLog: typeof console.log | null = null;
  * Creates and stores the original console.log if it hasn't been created already.
  */
 const createOriginalLog = (): void => {
-  if (!originalLog) {
+  if (
+    !originalLog &&
+    typeof console !== 'undefined' &&
+    typeof console.log === 'function'
+  ) {
     originalLog = console.log; // Store the original console.log function
   }
 };

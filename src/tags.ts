@@ -2,7 +2,7 @@ import {
   getLoggingConfiguration,
   updateLoggingConfiguration,
 } from './configurations';
-import { LoggingConfiguration } from './types';
+import { LoggingConfiguration } from './types/index';
 
 const aquaPalette = [
   '#00BFFF', // Deep Sky Blue

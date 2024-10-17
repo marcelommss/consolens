@@ -1,5 +1,5 @@
 import { loadTagColors } from './tags';
-import { CLOCK_TYPE, LoggingConfiguration, LoggingSetup } from './types';
+import { CLOCK_TYPE, LoggingConfiguration, LoggingSetup } from './types/index';
 
 // Internal master configuration object
 let masterLoggingConfig: LoggingConfiguration = {

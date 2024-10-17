@@ -14,7 +14,7 @@ import {
   LoggingSetup,
   LogHeaderParameters,
   LogParams,
-} from './types';
+} from './types/index';
 
 /**
  * Sets up the logging package with the provided configuration.
