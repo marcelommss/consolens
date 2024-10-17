@@ -1,0 +1,39 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore source code directory
+src/
+
+# Ignore build configuration files
+tsconfig.json
+jest.config.js
+
+# Ignore lock files
+package-lock.json
+
+# Ignore git-related files
+.gitignore
+.npmignore
+
+# Ignore test files and configuration
+**/*.test.ts
+**/*.test.js
+coverage/
+__tests__/
+
+# Ignore local environment files
+.env
+*.env
+
+# Ignore IDE/editor config files
+.vscode/
+.idea/
+
+# Ignore macOS-specific files
+.DS_Store
+
+# Ignore package metadata
+LICENSE
+
+# Keep only dist folder, exclude other build artifacts
+!.dist/

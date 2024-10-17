@@ -23,9 +23,9 @@
   - [Usage](#usage)
     - [Basic Setup](#basic-setup)
   - [Logging Functions](#logging-functions)
-      - [logDevInfo](#logdevinfo)
-      - [logDevWarning](#logdevwarning)
-      - [logDevError](#logdeverror)
+      - [log](#log)
+      - [logInfo, logWarning, logError](#loginfo-logwarning-logerror)
+      - [Dev functions](#dev-functions)
   - [Context](#context)
       - [How Context works](#how-context-works)
       - [Example](#example)
@@ -85,38 +85,68 @@ or skip this step if you want the default configuration:
 
 ## Logging Functions
 
-#### logDevInfo
-Logs informational messages with optional metadata such as source, function name, description, and more. This function will only log during development mode.
+#### log
+Create a log where you define the type: INFORMATION, ERROR or WARNING.
+
+```typescript
+import { log } from 'consolens';
+
+// Simple development log
+log({
+  type: LOG_TYPE.INFORMATION
+  source: 'ComponentName',
+  isEffect: true,
+  description: 'paginationData has changed',
+  args: [paginationData]
+});
+
+// Warning on user authentication failure
+log({
+  type: LOG_TYPE.WARNING
+  source: 'Login.tsx',
+  functionName: 'authentication',
+  description: 'Authenticate user failer',
+});
+```
+
+#### logInfo, logWarning, logError
+Logs informational messages with optional metadata such as source, function name, description, and more.
+
+```typescript
+import { logInfo, logWarning, logError } from 'consolens';
+
+// Simple development log
+logInfo({
+  source: 'App.tsx',
+  functionName: 'initializeApp',
+  description: 'Application initialized successfully!',
+  tags: [parameter1, parameter2],
+});
+```
+
+#### Dev functions
+This functions will only log during development mode.
 
 ```typescript
 import { logDevInfo, logDevWarning, logDevError } from 'consolens';
 
-// Simple development log
+// Information log: Logs informational messages with optional metadata such as source, function name, description, and more.
 logDevInfo({
   source: 'App.tsx',
   functionName: 'initializeApp',
   description: 'Application initialized successfully!',
   tags: ['init', 'app'],
 });
-```
 
-#### logDevWarning
-Logs warnings with metadata such as source, function name, description, and more.
-
-```typescript
-// Warning log
+// Warning log: Logs warnings with metadata such as source, function name, description, and more.
 logDevWarning({
   source: 'App.tsx',
   functionName: 'fetchData',
   description: 'Data fetch returned incomplete results.',
   tags: ['fetch', 'data'],
 });
-```
 
-#### logDevError
-Logs errors with metadata, providing detailed information and arguments.
-```typescript
-// Error log
+// Error log: Logs errors with metadata, providing detailed information and arguments.
 logDevError({
   source: 'App.tsx',
   functionName: 'processData',
@@ -147,7 +177,6 @@ logDevWarning({
   functionName: 'authenticateUser',
   description: 'User authentication failed.',
   context: 'auth',
-  tags: ['auth', 'login'],
 });
 ```
 
