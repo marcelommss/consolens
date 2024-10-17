@@ -1,6 +1,6 @@
 {
   "name": "consolens",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "consolens is a package that enhances JavaScript console logging with structured messages, auto-tagging, contextual information, and custom icons for a more readable and productive logging experience.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

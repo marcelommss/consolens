@@ -309,22 +309,25 @@ const prepareLog = (params: LogParams, baseColor: string) => {
  * @param baseColor - The base color for the log
  */
 const handleLog = (logType: LOG_TYPE, params: LogParams, baseColor: string) => {
-  const { data, styles, args } = prepareLog(params, baseColor);
-
-  // Log according to the log type and include args
-  switch (logType) {
-    case LOG_TYPE.INFORMATION:
-      console.info(data, ...styles, ...args);
-      break;
-    case LOG_TYPE.WARNING:
-      console.warn(data, ...styles, ...args);
-      break;
-    case LOG_TYPE.ERROR:
-      console.error(data, ...styles, ...args);
-      break;
-    default:
-      console.info(data, ...styles, ...args); // Default to info
-  }
+  try {
+    const { data, styles, args } = prepareLog(params, baseColor);
+    // Ensure args is defined, or default to an empty array
+    const safeArgs = args ?? [];
+    // Log according to the log type and include args
+    switch (logType) {
+      case LOG_TYPE.INFORMATION:
+        console.info(data, ...styles, ...safeArgs);
+        break;
+      case LOG_TYPE.WARNING:
+        console.warn(data, ...styles, ...safeArgs);
+        break;
+      case LOG_TYPE.ERROR:
+        console.error(data, ...styles, ...safeArgs);
+        break;
+      default:
+        console.info(data, ...styles, ...safeArgs); // Default to info
+    }
+  } catch {}
 };
 
 /**
