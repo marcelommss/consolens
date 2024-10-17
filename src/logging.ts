@@ -5,8 +5,8 @@ import {
 } from './configurations';
 import isDev from './helpers/DevDetect';
 import { findSymbol, KEYWORD_TYPES } from './icons';
-import { getOriginalLog } from './middleware';
-import { getTagColor, loadTagColors } from './tags';
+import { getOriginalLog, initializeLoggingMiddleware } from './middleware';
+import { getTagColor } from './tags';
 import {
   CLOCK_TYPE,
   LOG_HEADER_TYPE,
@@ -25,10 +25,8 @@ import {
 export function setupLogging(setupConfig: LoggingSetup): void {
   // Update the internal configuration
   initializeLogging(setupConfig);
-
+  if (setupConfig?.interceptLogs) initializeLoggingMiddleware();
   initializeTags();
-
-  if (setupConfig.interceptLogs) console.info('Welcome to Consolens');
 }
 
 /**

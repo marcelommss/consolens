@@ -11,6 +11,7 @@ jest.config.js
 # Ignore lock files
 package-lock.json
 
+.git/
 # Ignore git-related files
 .gitignore
 .npmignore

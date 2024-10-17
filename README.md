@@ -74,16 +74,20 @@ import { setupLogging } from 'consolens';
 
 // Set up the logging configuration
 setupLogging({
-  interceptLogs: true, // Enable middleware interception
-  datetimeDisplayType: CLOCK_TYPE.DATETIME, // Display both date and time in logs
+  // If true middleware interception or false to not interfer on other logs
+  interceptLogs: true, 
+  // CLOCK_TYPE.TIME: Display only time in logs
+  datetimeDisplayType: CLOCK_TYPE.TIME, 
 });
 ```
 
 or skip this step if you want the default configuration:
 ```typescript
-  interceptLogs: true,
-  datetimeDisplayType: CLOCK_TYPE.DATETIME, 
+  interceptLogs: false,
+  datetimeDisplayType: CLOCK_TYPE.DATETIME, // Display both date and time in logs
 ```
+
+To intercept default console entries, you must call setupLogging on your system start with interceptLogs: true.
 
 ---
 
@@ -225,7 +229,7 @@ Each tag receives a dynamic color. Recurring tags keeps the same color everytime
 **Consolens** allows you to integrate with your modern javascript framework.
 
 - **React** if you are logging something inside an useEffect for example, you can set the property *isEffect: true* and you get an especiall identifier on your log. 
-- 
+
 
 ---
 

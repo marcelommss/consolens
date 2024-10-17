@@ -110,18 +110,33 @@ const interceptConsoleLogs = (): void => {
       });
     }
   };
-};
 
+  console.info('Welcome to Consolens');
+};
 /**
  * Automatically starts the middleware on application initialization.
+ * Works for both browser and Node.js environments.
  */
 const initializeLoggingMiddleware = (): void => {
-  if (typeof window !== 'undefined' || typeof global !== 'undefined') {
-    interceptConsoleLogs();
+  // Check if running in a browser environment
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    // If the DOM is already fully loaded, initialize immediately
+    if (
+      document.readyState === 'complete' ||
+      document.readyState === 'interactive'
+    ) {
+      interceptConsoleLogs();
+    } else {
+      // Otherwise, wait for DOMContentLoaded
+      document.addEventListener('DOMContentLoaded', () => {
+        interceptConsoleLogs();
+      });
+    }
+  }
+  // Check if running in Node.js
+  else if (typeof global !== 'undefined') {
+    interceptConsoleLogs(); // No DOM events needed, so just initialize
   }
 };
-
-// Initialize the logging middleware
-initializeLoggingMiddleware();
 
 export { interceptConsoleLogs, initializeLoggingMiddleware, getOriginalLog };

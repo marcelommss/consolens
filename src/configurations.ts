@@ -4,7 +4,7 @@ import { CLOCK_TYPE, LoggingConfiguration, LoggingSetup } from './types';
 // Internal master configuration object
 let masterLoggingConfig: LoggingConfiguration = {
   datetimeDisplayType: CLOCK_TYPE.DATETIME, // Default value for datetimeDisplayType
-  interceptLogs: true, // Default value for interceptLogs
+  interceptLogs: false, // Default value for interceptLogs
   loadedTags: false, // Indicates if the tag colors have been loaded
   tagColors: {}, // Empty object to store tag colors
   colorCounter: 0, // Counter starts at 0
