@@ -1,0 +1,127 @@
+import { logDevInfo, logWarning, logError } from './logging';
+
+// Variable to store the original console.log
+let originalLog: typeof console.log | null = null;
+
+/**
+ * Creates and stores the original console.log if it hasn't been created already.
+ */
+const createOriginalLog = (): void => {
+  if (!originalLog) {
+    originalLog = console.log; // Store the original console.log function
+  }
+};
+
+/**
+ * Gets the original console.log.
+ * @returns {typeof console.log} The original console.log function.
+ */
+const getOriginalLog = (): typeof console.log => {
+  createOriginalLog(); // Ensure originalLog is created before returning it
+  return originalLog as typeof console.log;
+};
+
+/**
+ * Extracts the source file and line number from the stack trace.
+ *
+ * @returns {string} The file and line information where the log was called.
+ */
+const getSourceFromStack = (): string => {
+  const error = new Error();
+  const stackLines = error.stack?.split('\n') || [];
+  const relevantLine = stackLines.find((line) => line.includes('at'));
+
+  if (relevantLine) {
+    const match =
+      relevantLine.match(/at\s+(.*)\s+\((.*):(\d+):(\d+)\)/) ||
+      relevantLine.match(/at\s+(.*):(\d+):(\d+)/);
+    if (match) {
+      return `${match[2]}:${match[3]}`; // Returns file path and line number
+    }
+  }
+  return 'Unknown Source';
+};
+
+/**
+ * Intercepts the default console.log, console.warn, and console.error functions,
+ * and redirects them to the logging package's log functions.
+ * Extracts the source and description from the original logs and avoids recursion.
+ */
+const interceptConsoleLogs = (): void => {
+  // Backup the original console functions
+  createOriginalLog(); // Ensure originalLog is created
+  const originalLog = console.log;
+  const originalWarn = console.warn;
+  const originalError = console.error;
+
+  // Wraps console.log to avoid recursion and extract more information
+  console.log = (...args: any[]) => {
+    const source = getSourceFromStack();
+    const description =
+      typeof args[0] === 'string' ? args[0] : 'Intercepted log message';
+    const restArgs = args.slice(1); // Get remaining args
+
+    if (new Error().stack?.includes('logDevInfo')) {
+      originalLog(...args); // Call the original console.log
+    } else {
+      logDevInfo({
+        source,
+        functionName: 'console.log',
+        description,
+        args: restArgs,
+      });
+    }
+  };
+
+  // Wraps console.warn to avoid recursion and extract more information
+  console.warn = (...args: any[]) => {
+    const source = getSourceFromStack();
+    const description =
+      typeof args[0] === 'string' ? args[0] : 'Intercepted warning message';
+    const restArgs = args.slice(1); // Get remaining args
+
+    if (new Error().stack?.includes('logWarning')) {
+      originalWarn(...args); // Call the original console.warn
+    } else {
+      logWarning({
+        source,
+        functionName: 'console.warn',
+        description,
+        args: restArgs,
+      });
+    }
+  };
+
+  // Wraps console.error to avoid recursion and extract more information
+  console.error = (...args: any[]) => {
+    const source = getSourceFromStack();
+    const description =
+      typeof args[0] === 'string' ? args[0] : 'Intercepted error message';
+    const restArgs = args.slice(1); // Get remaining args
+
+    if (new Error().stack?.includes('logError')) {
+      originalError(...args); // Call the original console.error
+    } else {
+      logError({
+        source,
+        functionName: 'console.error',
+        description,
+        args: restArgs,
+      });
+    }
+  };
+};
+
+/**
+ * Automatically starts the middleware on application initialization.
+ */
+const initializeLoggingMiddleware = (): void => {
+  if (typeof window !== 'undefined' || typeof global !== 'undefined') {
+    interceptConsoleLogs();
+  }
+};
+
+// Initialize the logging middleware
+initializeLoggingMiddleware();
+
+export { interceptConsoleLogs, initializeLoggingMiddleware, getOriginalLog };

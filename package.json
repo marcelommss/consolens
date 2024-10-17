@@ -1,0 +1,39 @@
+{
+  "name": "consolens",
+  "version": "1.0.0",
+  "description": "consolens is a package that enhances JavaScript console logging with structured messages, auto-tagging, contextual information, and custom icons for a more readable and productive logging experience.",
+  "main": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcelommss/consolens.git"
+  },
+  "keywords": [
+    "console",
+    "logging",
+    "Javascript",
+    "TypeScript",
+    "structured-loggin",
+    "custom-icons"
+  ],
+  "author": "Marcelo Mattos (marcelomattos@hackem.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marcelommss/consolens/issues"
+  },
+  "homepage": "https://github.com/marcelommss/consolens#readme",
+  "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "@types/node": "^22.7.6",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.5",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "process": "^0.11.10"
+  }
+}
