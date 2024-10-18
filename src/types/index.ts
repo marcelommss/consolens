@@ -100,6 +100,13 @@ export interface LogParams {
    * Consolens will automatically detect a subgroup, but if a subgroup has not been created yet, you must specify its parent group when logging for the first time.
    */
   parentGroup?: string;
+
+  /**
+   * Indicates if this group will receive a background color with transparency.
+   * Each group will have an unique color, defined dynamically by Colorlens.
+   * false by default.
+   */
+  groupColor?: boolean;
 }
 
 /**
@@ -136,6 +143,11 @@ export interface MessageGroup {
    * An array of messages that belong to this group.
    */
   messages: LogMessage[];
+
+  /**
+   * Group background color, if any.
+   */
+  color?: string;
 }
 
 /**
