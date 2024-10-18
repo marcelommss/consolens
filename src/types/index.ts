@@ -1,4 +1,45 @@
 /**
+ * Enum representing different types of logs.
+ * Useful for categorizing logs such as informational logs, warnings, and errors.
+ */
+export enum LOG_TYPE {
+  /**
+   * Informational log type, used for general information messages.
+   */
+  INFORMATION = 'INFO',
+
+  /**
+   * Error log type, used to log errors or critical issues.
+   */
+  ERROR = 'ERROR',
+
+  /**
+   * Warning log type, used to log warnings about potential issues.
+   */
+  WARNING = 'WARNING',
+}
+
+/**
+ * Enum representing different types of date and time display.
+ */
+export enum CLOCK_TYPE {
+  /**
+   * Display only the date.
+   */
+  DATE = 'DATE_ONLY',
+
+  /**
+   * Display only the time.
+   */
+  TIME = 'TIME_ONLY',
+
+  /**
+   * DISPLAY COMPLETE DATE AND TIME.
+   */
+  DATETIME = 'DATETIME',
+}
+
+/**
  * Interface for logging parameters.
  * Provides structured data for logging functions such as source, function name, and description.
  */
@@ -47,47 +88,54 @@ export interface LogParams {
    * Tags used to categorize the log message (e.g., ['performance', 'api']).
    */
   tags?: string[];
+
+  /**
+   * Group used to group log messages and display them together.
+   * By default, messages with a group are hidden initially and can be displayed together using `logGroup`.
+   */
+  group?: string;
+
+  /**
+   * Indicates if the group belongs to another parent group.
+   * Consolens will automatically detect a subgroup, but if a subgroup has not been created yet, you must specify its parent group when logging for the first time.
+   */
+  parentGroup?: string;
 }
 
 /**
- * Enum representing different types of logs.
- * Useful for categorizing logs such as informational logs, warnings, and errors.
+ * Interface for log messages.
+ * Provides structured data for logging messages.
  */
-export enum LOG_TYPE {
+export interface LogMessage extends LogParams {
   /**
-   * Informational log type, used for general information messages.
+   * This indicates the type of the message
    */
-  INFORMATION = 'INFO',
+  type: LOG_TYPE;
 
   /**
-   * Error log type, used to log errors or critical issues.
+   * This indicates the color of the message
    */
-  ERROR = 'ERROR',
-
-  /**
-   * Warning log type, used to log warnings about potential issues.
-   */
-  WARNING = 'WARNING',
+  color?: string;
 }
 
 /**
- * Enum representing different types of date and time display.
+ * Interface for grouping log messages.
  */
-export enum CLOCK_TYPE {
+export interface MessageGroup {
   /**
-   * Display only the date.
+   * The title of the group.
    */
-  DATE = 'DATE_ONLY',
+  group: string;
 
   /**
-   * Display only the time.
+   * The title of the subgroup, if any.
    */
-  TIME = 'TIME_ONLY',
+  subGroup?: string;
 
   /**
-   * DISPLAY COMPLETE DATE AND TIME.
+   * An array of messages that belong to this group.
    */
-  DATETIME = 'DATETIME',
+  messages: LogMessage[];
 }
 
 /**

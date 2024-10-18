@@ -13,6 +13,7 @@ import {
   LOG_TYPE,
   LoggingSetup,
   LogHeaderParameters,
+  LogMessage,
   LogParams,
 } from './types/index';
 
@@ -303,31 +304,32 @@ const prepareLog = (params: LogParams, baseColor: string) => {
 };
 
 /**
- * Handles the actual logging based on log type (INFO, WARNING, ERROR).
- * @param logType - The type of log (INFO, WARNING, ERROR)
- * @param params - The logging parameters
- * @param baseColor - The base color for the log
+ * Handles the actual logging based on the LogMessage.
+ * @param message - The log message object containing type, color, and other parameters
  */
-const handleLog = (logType: LOG_TYPE, params: LogParams, baseColor: string) => {
-  try {
-    const { data, styles, args } = prepareLog(params, baseColor);
-    // Ensure args is defined, or default to an empty array
-    const safeArgs = args ?? [];
-    // Log according to the log type and include args
-    switch (logType) {
-      case LOG_TYPE.INFORMATION:
-        console.info(data, ...styles, ...safeArgs);
-        break;
-      case LOG_TYPE.WARNING:
-        console.warn(data, ...styles, ...safeArgs);
-        break;
-      case LOG_TYPE.ERROR:
-        console.error(data, ...styles, ...safeArgs);
-        break;
-      default:
-        console.info(data, ...styles, ...safeArgs); // Default to info
-    }
-  } catch {}
+const handleLog = (message: LogMessage) => {
+  const { data, styles, args } = prepareLog(
+    message,
+    message.color ?? 'lightgray'
+  );
+
+  // Ensure args is defined, or default to an empty array
+  const safeArgs = args ?? [];
+
+  // Log according to the log type and include args
+  switch (message.type) {
+    case LOG_TYPE.INFORMATION:
+      console.info(data, ...styles, ...safeArgs);
+      break;
+    case LOG_TYPE.WARNING:
+      console.warn(data, ...styles, ...safeArgs);
+      break;
+    case LOG_TYPE.ERROR:
+      console.error(data, ...styles, ...safeArgs);
+      break;
+    default:
+      console.info(data, ...styles, ...safeArgs); // Default to info
+  }
 };
 
 /**
@@ -346,7 +348,11 @@ const handleLog = (logType: LOG_TYPE, params: LogParams, baseColor: string) => {
  */
 const logInfo = (params: LogParams) => {
   initializeTags();
-  handleLog(LOG_TYPE.INFORMATION, params, 'lightgray');
+  handleLog({
+    ...params,
+    type: LOG_TYPE.INFORMATION,
+    color: params.messageColor,
+  });
 };
 
 /**
@@ -364,9 +370,12 @@ const logInfo = (params: LogParams) => {
  * @param {string[]} [params.tags] - Tags for log identification
  */
 const logWarning = (params: LogParams) => {
-  initializeTags();
-  initializeTags();
-  handleLog(LOG_TYPE.INFORMATION, params, 'lightgray');
+  // Create LogMessage from LogParams and pass to handleLog
+  handleLog({
+    ...params,
+    type: LOG_TYPE.WARNING,
+    color: params.messageColor ?? 'orange',
+  });
 };
 
 /**
@@ -385,7 +394,12 @@ const logWarning = (params: LogParams) => {
  */
 const logError = (params: LogParams) => {
   initializeTags();
-  handleLog(LOG_TYPE.ERROR, params, 'red');
+  // Create LogMessage from LogParams and pass to handleLog
+  handleLog({
+    ...params,
+    type: LOG_TYPE.ERROR,
+    color: params.messageColor ?? 'red',
+  });
 };
 
 /**
