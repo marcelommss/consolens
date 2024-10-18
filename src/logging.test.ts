@@ -4,11 +4,11 @@ import {
   logError,
   log,
   clearLog,
-  getCallingFileName,
   logDev,
 } from './logging';
-import isDev from './helpers/DevDetect';
+import isDev from './helpers/environment.helper';
 import { LOG_TYPE } from './types';
+import { getCallingFileName } from './helpers/files.helper';
 
 jest.mock('../helpers/DevDetect'); // Mock isDev to control its return value
 

@@ -103,7 +103,7 @@ export interface LogParams {
 
   /**
    * Indicates if this group will receive a background color with transparency.
-   * Each group will have an unique color, defined dynamically by Colorlens.
+   * Each group will have an unique colpredator, defined dynamically by Colorlens.
    * false by default.
    */
   groupColor?: boolean;
@@ -126,28 +126,43 @@ export interface LogMessage extends LogParams {
 }
 
 /**
- * Interface for grouping log messages.
+ * Interface for log groups.
  */
-export interface MessageGroup {
+export interface LogGroup {
   /**
-   * The title of the group.
+   * The group title that identifies the group.
    */
-  group: string;
+  id: string;
 
   /**
-   * The title of the subgroup, if any.
+   * Children groups array, allowing for nested subgroups.
    */
-  subGroup?: string;
-
-  /**
-   * An array of messages that belong to this group.
-   */
-  messages: LogMessage[];
+  children?: MessageGroup[];
 
   /**
    * Group background color, if any.
    */
   color?: string;
+}
+
+/**
+ * Interface for grouping log messages.
+ */
+export interface MessageGroup {
+  /**
+   * The group identifier.
+   */
+  groupId: string;
+
+  /**
+   * MessageGroup subgroups, allowing for multiple levels of nesting.
+   */
+  subGroups?: MessageGroup[];
+
+  /**
+   * An array of messages that belong to this group.
+   */
+  messages: LogMessage[];
 }
 
 /**

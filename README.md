@@ -26,6 +26,7 @@
   - [Installation](#installation)
   - [Usage](#usage)
     - [Basic Setup](#basic-setup)
+    - [Basic Usage](#basic-usage)
   - [Logging Functions](#logging-functions)
       - [log](#log)
       - [logInfo, logWarning, logError](#loginfo-logwarning-logerror)
@@ -76,7 +77,7 @@ import { setupLogging } from 'consolens';
 setupLogging({
   // If true middleware interception or false to not interfer on other logs
   interceptLogs: true, 
-  // CLOCK_TYPE.TIME: Display only time in logs
+  //CLOCK_TYPE.TIME: Display only time in logs
   datetimeDisplayType: CLOCK_TYPE.TIME, 
 });
 ```
@@ -84,10 +85,39 @@ setupLogging({
 or skip this step if you want the default configuration:
 ```typescript
   interceptLogs: false,
-  datetimeDisplayType: CLOCK_TYPE.DATETIME, // Display both date and time in logs
+  //CLOCK_TYPE.DATETIME: Display both date and time in logs
+  datetimeDisplayType: CLOCK_TYPE.DATETIME,
 ```
 
 To intercept default console entries, you must call setupLogging on your system start with interceptLogs: true.
+
+### Basic Usage
+
+All logging functions have the following optional parameters that help format the console entry UI:
+
+- **`source?`**: The source file or component emitting the log (e.g., `'App.tsx'`). This helps identify where the log was generated.
+
+- **`functionName?`**: The name of the function that generated the log (e.g., `'fetchData'`). Useful for tracing the log back to a specific function.
+
+- **`isEffect?`**: A boolean indicating whether this log is related to a side effect. Helps categorize logs that are tied to asynchronous actions or state changes.
+
+- **`description?`**: A string providing a description of the log message, explaining its purpose or context.
+
+- **`args?`**: Additional arguments or data to log, such as responses, objects, or any other relevant information. Can accept any type or an array of any types.
+
+- **`messageColor?`**: A custom color for the log message. This allows you to apply custom styling to logs, making it easier to visually distinguish them in the console.
+
+- **`line?`**: The line number where the log occurred. Helps in pinpointing the exact line of code responsible for the log.
+
+- **`context?`**: Additional context information relevant to the log message. This can be used to provide extra details about the log.
+
+- **`tags?`**: An array of tags used to categorize the log message (e.g., `['performance', 'api']`). This can help in filtering or grouping logs by category.
+
+- **`group?`**: Used to group log messages and display them together. By default, messages with a group are hidden initially and can be displayed together using `logGroup`.
+
+- **`parentGroup?`**: Indicates if the group belongs to another parent group. `Consolens` automatically detects subgroups, but if a subgroup hasn’t been created yet, you must specify its parent group when logging for the first time.
+
+- **`groupColor?`**: A boolean indicating whether this group should receive a background color with transparency. Each group will have a unique color, defined dynamically by Colorlens. The default is `false`.
 
 ---
 
@@ -99,11 +129,10 @@ Create a log where you define the type: INFORMATION, ERROR or WARNING.
 ```typescript
 import { log } from 'consolens';
 
-// Simple development log
+// Simple information log
 log({
   type: LOG_TYPE.INFORMATION
   source: 'ComponentName',
-  isEffect: true,
   description: 'paginationData has changed',
   args: [paginationData]
 });
@@ -113,7 +142,7 @@ log({
   type: LOG_TYPE.WARNING
   source: 'Login.tsx',
   functionName: 'authentication',
-  description: 'Authenticate user failer',
+  description: 'Authenticate user failed',
 });
 ```
 
@@ -127,8 +156,9 @@ import { logInfo, logWarning, logError } from 'consolens';
 logInfo({
   source: 'App.tsx',
   functionName: 'initializeApp',
+  isEffect: true,
   description: 'Application initialized successfully!',
-  tags: [parameter1, parameter2],
+  tags: [loading, error],
 });
 ```
 
@@ -151,7 +181,7 @@ logDevWarning({
   source: 'App.tsx',
   functionName: 'fetchData',
   description: 'Data fetch returned incomplete results.',
-  tags: ['fetch', 'data'],
+  tags: ['fetch', dataObject],
 });
 
 // Error log: Logs errors with metadata, providing detailed information and arguments.
