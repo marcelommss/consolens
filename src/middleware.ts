@@ -1,7 +1,7 @@
 import Icons from './data/icons.data';
 import { handleMessage } from './helpers/logger.helper';
 import { logCallout } from './logging';
-import { LOG_TYPE } from './types/index';
+import { LOG_HEADER_TYPE, LOG_TYPE } from './types/index';
 
 // Variable to store the original console.log
 let originalLog: typeof console.log | null = null;
@@ -124,7 +124,11 @@ const interceptConsoleLogs = (): void => {
     }
   };
 
-  logCallout({ title: 'Welcome to Consolens', icon: Icons.Search });
+  logCallout({
+    title: 'Welcome to Consolens',
+    icon: Icons.Search,
+    type: LOG_HEADER_TYPE.H5,
+  });
 };
 /**
  * Automatically starts the middleware on application initialization.
