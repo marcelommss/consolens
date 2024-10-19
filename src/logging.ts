@@ -43,7 +43,6 @@ export function setupLogging(setupConfig: LoggingSetup): void {
  * @param {string[]} [params.tags] - Tags for log identification
  */
 const logInfo = (params: LogParams) => {
-  initializeTags();
   handleLog({
     ...params,
     type: LOG_TYPE.INFORMATION,
@@ -66,7 +65,6 @@ const logInfo = (params: LogParams) => {
  * @param {string[]} [params.tags] - Tags for log identification
  */
 const logWarning = (params: LogParams) => {
-  // Create LogMessage from LogParams and pass to handleLog
   handleLog({
     ...params,
     type: LOG_TYPE.WARNING,
@@ -89,8 +87,6 @@ const logWarning = (params: LogParams) => {
  * @param {string[]} [params.tags] - Tags for log identification
  */
 const logError = (params: LogParams) => {
-  initializeTags();
-  // Create LogMessage from LogParams and pass to handleLog
   handleLog({
     ...params,
     type: LOG_TYPE.ERROR,

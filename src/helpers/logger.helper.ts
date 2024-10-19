@@ -302,10 +302,7 @@ export const handleMessage = (message: LogMessage) => {
  * @param {LogMessage} message - The log message object containing type, color, group, and other parameters.
  */
 export const handleLog = (message: LogMessage) => {
-  const { data, styles, args } = prepareLog(
-    message,
-    message.color ?? 'lightgray'
-  );
+  initializeTags();
 
   // Check if the message is part of a group or parent group
   if (message.group || message.parentGroup) {

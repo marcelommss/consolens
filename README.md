@@ -27,7 +27,7 @@
   - [Installation](#installation)
   - [Usage](#usage)
     - [Basic Setup](#basic-setup)
-    - [Basic Usage](#basic-usage)
+    - [How to log with Consolens](#how-to-log-with-consolens)
   - [Logging Functions](#logging-functions)
       - [log](#log)
       - [logInfo, logWarning, logError](#loginfo-logwarning-logerror)
@@ -96,7 +96,7 @@ or skip this step if you want the default configuration:
 
 To intercept default console entries, you must call setupLogging on your system start with interceptLogs: true.
 
-### Basic Usage
+### How to log with Consolens
 
 All logging functions have the following optional parameters that help format the console entry UI:
 

@@ -128,6 +128,11 @@ export interface LogMessage extends LogParams {
    * This indicates the group level of the message
    */
   groupLevel?: number;
+
+  /**
+   * This indicates the log message comes default console.log
+   */
+  isFromDefaultConsole?: boolean;
 }
 
 /**

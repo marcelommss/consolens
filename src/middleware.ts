@@ -1,4 +1,6 @@
+import { handleMessage } from './helpers/logger.helper';
 import { logDevInfo, logWarning, logError } from './logging';
+import { LOG_TYPE } from './types/index';
 
 // Variable to store the original console.log
 let originalLog: typeof console.log | null = null;
@@ -68,11 +70,13 @@ const interceptConsoleLogs = (): void => {
     if (new Error().stack?.includes('logDevInfo')) {
       originalLog(...args); // Call the original console.log
     } else {
-      logDevInfo({
+      handleMessage({
+        type: LOG_TYPE.INFORMATION,
         source,
         functionName: 'console.log',
         description,
         args: restArgs,
+        isFromDefaultConsole: true,
       });
     }
   };
@@ -87,11 +91,13 @@ const interceptConsoleLogs = (): void => {
     if (new Error().stack?.includes('logWarning')) {
       originalWarn(...args); // Call the original console.warn
     } else {
-      logWarning({
+      handleMessage({
+        type: LOG_TYPE.WARNING,
         source,
         functionName: 'console.warn',
         description,
         args: restArgs,
+        isFromDefaultConsole: true,
       });
     }
   };
@@ -106,11 +112,13 @@ const interceptConsoleLogs = (): void => {
     if (new Error().stack?.includes('logError')) {
       originalError(...args); // Call the original console.error
     } else {
-      logError({
+      handleMessage({
+        type: LOG_TYPE.ERROR,
         source,
         functionName: 'console.error',
         description,
         args: restArgs,
+        isFromDefaultConsole: true,
       });
     }
   };
