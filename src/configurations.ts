@@ -1,13 +1,21 @@
 import { loadTagColors } from './tags';
-import { CLOCK_TYPE, LoggingConfiguration, LoggingSetup } from './types/index';
+import {
+  CLOCK_TYPE,
+  LOG_HEADER_TYPE,
+  LoggingConfiguration,
+  LoggingSetup,
+} from './types/index';
 
 // Internal master configuration object
-let masterLoggingConfig: LoggingConfiguration = {
+const masterLoggingConfig: LoggingConfiguration = {
   datetimeDisplayType: CLOCK_TYPE.DATETIME, // Default value for datetimeDisplayType
   interceptLogs: false, // Default value for interceptLogs
   loadedTags: false, // Indicates if the tag colors have been loaded
   tagColors: {}, // Empty object to store tag colors
   colorCounter: 0, // Counter starts at 0
+  defaultHeaderSize: LOG_HEADER_TYPE.H2,
+  defaultCalloutSize: LOG_HEADER_TYPE.H3,
+  defaultCalloutBorder: '#FFFFFF55',
 };
 
 /**

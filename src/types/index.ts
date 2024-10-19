@@ -1,3 +1,5 @@
+import Icons from '../data/icons.data';
+
 /**
  * Enum representing different types of logs.
  * Useful for categorizing logs such as informational logs, warnings, and errors.
@@ -180,6 +182,21 @@ export interface LoggingSetup {
    * Options are CLOCK_TYPE.DATETIME, CLOCK_TYPE.DATE, and CLOCK_TYPE.TIME.
    */
   datetimeDisplayType: CLOCK_TYPE;
+
+  /**
+   * Default text size for headers.
+   */
+  defaultHeaderSize?: LOG_HEADER_TYPE;
+
+  /**
+   * Default text size for callouts.
+   */
+  defaultCalloutSize?: LOG_HEADER_TYPE;
+
+  /**
+   * Default border color for callouts.
+   */
+  defaultCalloutBorder?: string;
 }
 
 /**
@@ -247,7 +264,7 @@ export interface LogHeaderParameters {
   /**
    * The type of header (e.g., H1, H2, etc.), determining the font size for the console output.
    */
-  type: LOG_HEADER_TYPE;
+  type?: LOG_HEADER_TYPE;
 }
 
 /**

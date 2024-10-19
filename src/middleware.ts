@@ -1,5 +1,6 @@
+import Icons from './data/icons.data';
 import { handleMessage } from './helpers/logger.helper';
-import { logDevInfo, logWarning, logError } from './logging';
+import { logCallout } from './logging';
 import { LOG_TYPE } from './types/index';
 
 // Variable to store the original console.log
@@ -123,7 +124,7 @@ const interceptConsoleLogs = (): void => {
     }
   };
 
-  console.info('Welcome to Consolens');
+  logCallout({ title: 'Welcome to Consolens', icon: Icons.Search });
 };
 /**
  * Automatically starts the middleware on application initialization.

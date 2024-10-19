@@ -197,3 +197,5 @@ enum Icons {
   Zebra = '🦓',
   Zoo = '🦁',
 }
+
+export default Icons;

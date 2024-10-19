@@ -1,4 +1,8 @@
-import { initializeLogging, initializeTags } from './configurations';
+import {
+  getLoggingConfiguration,
+  initializeLogging,
+  initializeTags,
+} from './configurations';
 import isDev from './helpers/environment.helper';
 import {
   handleAllGroups,
@@ -165,47 +169,8 @@ const logDivider = (char = '═', length = 72) => {
  */
 function logHeader({ title, type }: LogHeaderParameters): void {
   let fontSize = '16px'; // Default font size for H5
-
-  switch (type) {
-    case LOG_HEADER_TYPE.H1:
-      fontSize = '32px';
-      break;
-    case LOG_HEADER_TYPE.H2:
-      fontSize = '28px';
-      break;
-    case LOG_HEADER_TYPE.H3:
-      fontSize = '24px';
-      break;
-    case LOG_HEADER_TYPE.H4:
-      fontSize = '20px';
-      break;
-    case LOG_HEADER_TYPE.H5:
-    default:
-      fontSize = '16px';
-      break;
-  }
-
-  const padding = '12px'; // Padding for visual separation of the header
-
-  // Use the original console.log to avoid interception by middleware
-  getOriginalLog()?.(
-    `%c${title}`,
-    `font-size: ${fontSize}; font-weight: bold; text-align: center; padding: ${padding} 0; display: block; background-color: #f0f0f0; border: solid 2px #000;`
-  );
-}
-
-/**
- * Logs a callout with a title and an optional icon, centered in the console with top and bottom padding.
- * The callout has a left border and displays an icon (if provided) followed by the title with proper spacing.
- *
- * @param {LogCalloutParameters} params - The parameters including title, callout type, and an optional icon.
- */
-function logCallout({
-  title,
-  icon,
-  type = LOG_HEADER_TYPE.H3,
-}: LogCalloutParameters): void {
-  let fontSize = '16px'; // Default font size for H5
+  const config = getLoggingConfiguration();
+  if (!type) type = config.defaultHeaderSize;
 
   switch (type) {
     case LOG_HEADER_TYPE.H1:
@@ -227,14 +192,57 @@ function logCallout({
   }
 
   const padding = '12px'; // Padding for visual separation of the callout
-  const leftBorder = '4px solid #FFFFFF66'; // Left border for callout
-  const displayIcon = icon ? `${icon} ` : ''; // Add the icon with a space after it
 
   // Use the original console.log to avoid interception by middleware
   getOriginalLog()?.(
-    `%c${displayIcon}\u00A0\u00A0${title}`, // Display icon + space + title
-    `font-size: ${fontSize}; font-weight: bold; text-align: center; padding: ${padding} 0; display: block; 
-     background-color: #f0f0f0; border-left: ${leftBorder}; border: solid 2px #000;`
+    `%c\u00A0\u00A0${title}`, // Display icon + space + title
+    `font-size: ${fontSize}; font-weight: bold; text-align: center; padding: ${padding} 0;
+   display: flex; align-items: center; justify-content: space-between; 
+   width: 100vw; white-space: pre;`
+  );
+}
+
+/**
+ * Logs a callout with a title and an optional icon, centered in the console with top and bottom padding.
+ * The callout has a left border and displays an icon (if provided) followed by the title with proper spacing.
+ *
+ * @param {LogCalloutParameters} params - The parameters including title, callout type, and an optional icon.
+ */
+function logCallout({ title, icon, type }: LogCalloutParameters): void {
+  let fontSize = '16px'; // Default font size for H5
+  const config = getLoggingConfiguration();
+  if (!type) type = config.defaultHeaderSize;
+
+  switch (type) {
+    case LOG_HEADER_TYPE.H1:
+      fontSize = '32px';
+      break;
+    case LOG_HEADER_TYPE.H2:
+      fontSize = '28px';
+      break;
+    case LOG_HEADER_TYPE.H3:
+      fontSize = '24px';
+      break;
+    case LOG_HEADER_TYPE.H4:
+      fontSize = '20px';
+      break;
+    case LOG_HEADER_TYPE.H5:
+    default:
+      fontSize = '16px';
+      break;
+  }
+
+  const padding = '12px'; // Padding for visual separation of the callout
+  const leftBorder = `solid 4px #FFFFFF55`; // Left border for callout
+  const displayIcon = icon ? `${icon} ` : ''; // Add the icon with a space after it
+  const filler = '\u00A0'.repeat(500);
+  // Use the original console.log to avoid interception by middleware
+  getOriginalLog()?.(
+    `%c  ${displayIcon}\u00A0\u00A0${title}${filler}`, // Display icon + space + title
+    `font-size: ${fontSize}; font-weight: bold; text-align: center; padding: ${padding} 0;
+   display: flex; align-items: center; justify-content: space-between; 
+   width: 100vw; white-space: pre; 
+   background-color: {#FFFFFF11}; border-left: ${leftBorder};`
   );
 }
 
