@@ -84,6 +84,12 @@ setupLogging({
   interceptLogs: true, 
   //CLOCK_TYPE.TIME: Display only time in logs
   datetimeDisplayType: CLOCK_TYPE.TIME, 
+  //LOG_HEADER_TYPE.H2: Sets the size of the header text
+  defaultHeaderSize: LOG_HEADER_TYPE.H2, 
+  //LOG_HEADER_TYPE.H3: Sets the size of the callout text
+  defaultCalloutSize: LOG_HEADER_TYPE.H3, 
+  //color of the callout border
+  defaultCalloutBorder: '#FFFFFF55', 
 });
 ```
 
