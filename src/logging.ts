@@ -1,10 +1,15 @@
 import { initializeLogging, initializeTags } from './configurations';
 import isDev from './helpers/environment.helper';
-import { handleLog } from './helpers/logger.helper';
+import {
+  handleAllGroups,
+  handleGroup,
+  handleLog,
+} from './helpers/logger.helper';
 import { getOriginalLog, initializeLoggingMiddleware } from './middleware';
 import {
   LOG_HEADER_TYPE,
   LOG_TYPE,
+  LogCalloutParameters,
   LoggingSetup,
   LogHeaderParameters,
   LogParams,
@@ -193,6 +198,68 @@ function logHeader({ title, type }: LogHeaderParameters): void {
   );
 }
 
+/**
+ * Logs a callout with a title and an optional icon, centered in the console with top and bottom padding.
+ * The callout has a left border and displays an icon (if provided) followed by the title with proper spacing.
+ *
+ * @param {LogCalloutParameters} params - The parameters including title, callout type, and an optional icon.
+ */
+function logCallout({
+  title,
+  icon,
+  type = LOG_HEADER_TYPE.H3,
+}: LogCalloutParameters): void {
+  let fontSize = '16px'; // Default font size for H5
+
+  switch (type) {
+    case LOG_HEADER_TYPE.H1:
+      fontSize = '32px';
+      break;
+    case LOG_HEADER_TYPE.H2:
+      fontSize = '28px';
+      break;
+    case LOG_HEADER_TYPE.H3:
+      fontSize = '24px';
+      break;
+    case LOG_HEADER_TYPE.H4:
+      fontSize = '20px';
+      break;
+    case LOG_HEADER_TYPE.H5:
+    default:
+      fontSize = '16px';
+      break;
+  }
+
+  const padding = '12px'; // Padding for visual separation of the callout
+  const leftBorder = '4px solid #FFFFFF66'; // Left border for callout
+  const displayIcon = icon ? `${icon} ` : ''; // Add the icon with a space after it
+
+  // Use the original console.log to avoid interception by middleware
+  getOriginalLog()?.(
+    `%c${displayIcon}\u00A0\u00A0${title}`, // Display icon + space + title
+    `font-size: ${fontSize}; font-weight: bold; text-align: center; padding: ${padding} 0; display: block; 
+     background-color: #f0f0f0; border-left: ${leftBorder}; border: solid 2px #000;`
+  );
+}
+
+/**
+ * Logs all messages from a specific group.
+ * If no groupId is provided, logs the messages of the first available group.
+ *
+ * @param {string} [groupId] - The group identifier. If not provided, the first group will be logged.
+ */
+const logGroup = (groupId?: string): void => {
+  handleGroup(groupId);
+};
+
+/**
+ * Logs all messages from all groups.
+ * This function logs the messages from every group in the logGroups stack.
+ */
+const logGroups = (): void => {
+  handleAllGroups();
+};
+
 export {
   log,
   logError,
@@ -205,4 +272,7 @@ export {
   clearLog,
   logDivider,
   logHeader,
+  logCallout,
+  logGroup,
+  logGroups,
 };

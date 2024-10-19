@@ -123,6 +123,11 @@ export interface LogMessage extends LogParams {
    * This indicates the color of the message
    */
   color?: string;
+
+  /**
+   * This indicates the group level of the message
+   */
+  groupLevel?: number;
 }
 
 /**
@@ -137,32 +142,22 @@ export interface LogGroup {
   /**
    * Children groups array, allowing for nested subgroups.
    */
-  children?: MessageGroup[];
-
-  /**
-   * Group background color, if any.
-   */
-  color?: string;
-}
-
-/**
- * Interface for grouping log messages.
- */
-export interface MessageGroup {
-  /**
-   * The group identifier.
-   */
-  groupId: string;
-
-  /**
-   * MessageGroup subgroups, allowing for multiple levels of nesting.
-   */
-  subGroups?: MessageGroup[];
+  children?: LogGroup[];
 
   /**
    * An array of messages that belong to this group.
    */
   messages: LogMessage[];
+
+  /**
+   * Group background color, if any.
+   */
+  color?: string;
+
+  /**
+   * Group tree level.
+   */
+  level: number;
 }
 
 /**
@@ -248,4 +243,15 @@ export interface LogHeaderParameters {
    * The type of header (e.g., H1, H2, etc.), determining the font size for the console output.
    */
   type: LOG_HEADER_TYPE;
+}
+
+/**
+ * Interface representing the parameters for logging a callout.
+ * This will determine the title content and the icon in the console.
+ */
+export interface LogCalloutParameters extends LogHeaderParameters {
+  /**
+   * An icon representing the callout
+   */
+  icon?: Icons;
 }

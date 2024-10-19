@@ -1,8 +1,15 @@
-import { CLOCK_TYPE, LOG_TYPE, LogMessage, LogParams } from '../types/index';
+import {
+  CLOCK_TYPE,
+  LOG_TYPE,
+  LogGroup,
+  LogMessage,
+  LogParams,
+} from '../types/index';
 import { findSymbol, KEYWORD_TYPES } from '../icons';
 import { getTagColor } from '../tags';
 import { getLoggingConfiguration, initializeTags } from '../configurations';
 import { getCallingFile } from './files.helper';
+import { addMessage, getAllMessages, getGroupMessages } from '../groups';
 
 /**
  * Creates a formatted message string for the log based on the parameters and adds a symbol if needed.
@@ -258,17 +265,17 @@ const prepareLog = (params: LogParams, baseColor: string) => {
 
   return { data, styles, args: params.args };
 };
-
 /**
- * Handles the actual logging based on the LogMessage.
- * @param message - The log message object containing type, color, and other parameters
+ * Logs an individual message to the console.
+ * This function handles the actual logging for a given `LogMessage` object.
+ *
+ * @param {LogMessage} message - The log message object containing type, color, and other parameters.
  */
-export const handleLog = (message: LogMessage) => {
+export const handleMessage = (message: LogMessage) => {
   const { data, styles, args } = prepareLog(
     message,
     message.color ?? 'lightgray'
   );
-
   // Ensure args is defined, or default to an empty array
   const safeArgs = args ?? [];
 
@@ -286,4 +293,49 @@ export const handleLog = (message: LogMessage) => {
     default:
       console.info(data, ...styles, ...safeArgs); // Default to info
   }
+};
+
+/**
+ * Handles logging for both individual and grouped messages.
+ * If the message belongs to a group, it will be added to the group stack and not logged immediately.
+ *
+ * @param {LogMessage} message - The log message object containing type, color, group, and other parameters.
+ */
+export const handleLog = (message: LogMessage) => {
+  const { data, styles, args } = prepareLog(
+    message,
+    message.color ?? 'lightgray'
+  );
+
+  // Check if the message is part of a group or parent group
+  if (message.group || message.parentGroup) {
+    addMessage(message);
+    // Do not log the message immediately; it will be handled when the group is logged
+    return;
+  }
+
+  // Log individual message immediately
+  return handleMessage(message);
+};
+
+/**
+ * Logs all messages from a specific group.
+ * Messages within the group are retrieved and logged sequentially.
+ *
+ * @param {string} [groupId] - The group identifier. If not provided, the first available group will be logged.
+ */
+export const handleGroup = (groupId?: string) => {
+  const messages = getGroupMessages(groupId);
+  messages.forEach((message) => handleMessage(message));
+};
+
+/**
+ * Logs all messages from all groups.
+ * This function retrieves and logs messages from every group in the logGroups stack.
+ */
+export const handleAllGroups = () => {
+  const allMessages = getAllMessages();
+
+  // Log each message sequentially
+  allMessages.forEach((message) => handleMessage(message));
 };

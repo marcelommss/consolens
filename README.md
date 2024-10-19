@@ -40,6 +40,7 @@
   - [Dynamic Symbols](#dynamic-symbols)
   - [Framework specicific](#framework-specicific)
   - [Headers](#headers)
+  - [Callouts](#callouts)
   - [Configuration](#configuration)
       - [setupLogging](#setuplogging)
         - [CLOCK\_TYPE](#clock_type)
@@ -273,6 +274,22 @@ import { logHeader, LOG_HEADER_TYPE } from 'consolens';
 logHeader({
   title: 'Application Initialization',
   type: LOG_HEADER_TYPE.H1, // Available types: H1, H2, H3, H4, H5
+});
+```
+This will print the header with padding and center it in the console with appropriate font sizes based on the header type.
+
+---
+
+## Callouts
+
+You can create styled headers for better log separation and readability using **logHeader**.
+
+```typescript
+import { logHeader, LOG_HEADER_TYPE } from 'consolens';
+
+logCallout({
+  title: 'Application Initialization',
+  icon: Icons.Cloud, // Available types: H1, H2, H3, H4, H5
 });
 ```
 This will print the header with padding and center it in the console with appropriate font sizes based on the header type.
