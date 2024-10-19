@@ -8,6 +8,7 @@
 
 - **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
 - **Improved console UI**: Massivelly improves the readability of your logs with a much cleanner, space UI.
+- **REAL Grouping!**: Group log messages as it is supposed to: grouped!
 - **Customizable output**: Modify colors, tags, and formatting for logs.
 - **Development logging**: Choose which logs are going to appear only in  development environments.
 - **Tagging**: Auto-tag logs with colors for easy identification.
@@ -38,6 +39,9 @@
     - [How Tags Work](#how-tags-work)
     - [Example:](#example-1)
   - [Dynamic Symbols](#dynamic-symbols)
+  - [Grouping Logs](#grouping-logs)
+    - [Displaying Groups](#displaying-groups)
+    - [How it works](#how-it-works)
   - [Framework specicific](#framework-specicific)
   - [Headers](#headers)
   - [Callouts](#callouts)
@@ -153,7 +157,7 @@ Logs informational messages with optional metadata such as source, function name
 ```typescript
 import { logInfo, logWarning, logError } from 'consolens';
 
-// Simple development log
+// this will create a consolens log
 logInfo({
   source: 'App.tsx',
   functionName: 'initializeApp',
@@ -211,7 +215,7 @@ You can create only one context, that is always a yellow chip.
 #### Example
 
 ```typescript
-logDevWarning({
+logInfo({
   source: 'LoginPage.tsx',
   functionName: 'authenticateUser',
   description: 'User authentication failed.',
@@ -255,6 +259,27 @@ Each tag receives a dynamic color. Recurring tags keeps the same color everytime
 
 ---
 
+## Grouping Logs
+
+**Consolens** provides the ability to group log messages into logical units, making your console output more organized and readable.
+
+A **LogGroup** is a collection of related log messages grouped under a single title, enhancing the console UI by visually separating these groups. Any log messages assigned to a group are hidden by default and are only displayed when the entire group is shown.
+
+### Displaying Groups
+
+- To display all messages within a specific group, use the `logGroup(groupId)` function. This will reveal all the messages associated with the specified group.
+- To display all groups and their corresponding messages, call `logGroups()`, which outputs every group and its messages at once.
+
+This grouping feature makes it easier to navigate through grouped logs, especially in complex debugging scenarios.
+
+### How it works
+
+Each message that is sent with the `group` and/or `parentGroup` properties is stored in the group stacks. When a group is displayed, all the messages from that group, including any nested subgroups, are shown. After the group is displayed, the stack for that group is cleared.
+
+This ensures that grouped logs are presented in a structured manner, showing all related messages at once, along with any subgroups, before resetting the group stack.
+
+---
+
 ## Framework specicific
 
 **Consolens** allows you to integrate with your modern javascript framework.
@@ -285,14 +310,14 @@ This will print the header with padding and center it in the console with approp
 You can create styled headers for better log separation and readability using **logHeader**.
 
 ```typescript
-import { logHeader, LOG_HEADER_TYPE } from 'consolens';
+import { logCallout, LOG_HEADER_TYPE } from 'consolens';
 
 logCallout({
   title: 'Application Initialization',
   icon: Icons.Cloud, // Available types: H1, H2, H3, H4, H5
 });
 ```
-This will print the header with padding and center it in the console with appropriate font sizes based on the header type.
+This will print a callout with a title and an icon
 
 ---
 
@@ -314,7 +339,6 @@ setupLogging({
 - CLOCK_TYPE.DATETIME: Displays both date and time.
 - CLOCK_TYPE.DATE: Displays only the date.
 - CLOCK_TYPE.TIME: Displays only the time.
-
 
 ---
 
