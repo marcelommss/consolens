@@ -323,3 +323,23 @@ export interface LogCalloutParameters extends LogHeaderParameters {
    */
   icon?: Icons;
 }
+
+/**
+ * Data from stack trace
+ */
+export interface TraceInformation {
+  /**
+   * Calling function.
+   */
+  functionName?: string;
+
+  /**
+   * Calling file.
+   */
+  fileName?: string;
+
+  /**
+   * Calling line number.
+   */
+  lineNumber?: number;
+}

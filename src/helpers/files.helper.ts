@@ -1,3 +1,5 @@
+import { TraceInformation } from '../types/index';
+
 /**
  * Retrieves the file name and line number of the calling function from the stack trace.
  *
@@ -26,6 +28,76 @@ export function getCallingFileName(): string | null {
 }
 
 /**
+ * Captures and returns the current stack trace as an array of strings.
+ * Each element in the array represents a line in the stack trace.
+ *
+ * @returns {string[]} An array of stack trace entries, or an empty array if the stack trace is unavailable.
+ */
+const captureStackTrace = (): string[] => {
+  const error = new Error();
+  const stackTrace = error.stack;
+  if (!stackTrace) return [];
+  return stackTrace.split('\n');
+};
+
+/**
+ * Extracts trace information such as function name, file name, and line number from the current stack trace.
+ * This function captures the stack trace and parses the relevant entry to gather information about the
+ * function and source file where the trace was triggered.
+ *
+ * @returns {TraceInformation} An object containing functionName, fileName, and lineNumber.
+ *                             If the stack trace is too short or cannot be parsed, the values will be undefined.
+ */
+export const findDataFromTrace = (): TraceInformation => {
+  const traceData: TraceInformation = {};
+  const entries = captureStackTrace();
+  console.log(entries);
+  if (entries.length === 0) return traceData;
+  let sourceIndex = 0;
+  entries.forEach((entry, index) => {
+    if (
+      entry.includes('at handleLog') &&
+      entry.includes('logging/helpers/logger.helper.ts')
+    )
+      sourceIndex = index + 2;
+  });
+
+  console.log('sourceIndex', sourceIndex);
+  const stackEntry = entries[sourceIndex];
+
+  // Extract the function name
+  const matchFunction = stackEntry.match(/at\s+([^\s(]+)/);
+  traceData.functionName = matchFunction ? matchFunction[1] : undefined;
+
+  // Extract the source file information
+  const matchSource = stackEntry.match(/\/([^/]+\.[a-z]+)(\?|:)/i);
+  if (matchSource) {
+    let fullFilePath = matchSource[1];
+
+    // Check if the file is "index" and adjust for parent folder
+    if (/^index\.[a-z]+$/i.test(fullFilePath)) {
+      const parentFolderMatch = stackEntry.match(
+        /\/([^/]+)\/index\.[a-z]+(\?|:)/i
+      );
+      if (parentFolderMatch) {
+        fullFilePath = `${parentFolderMatch[1]}/index.${fullFilePath
+          .split('.')
+          .pop()}`;
+      }
+      traceData.fileName = fullFilePath;
+    } else {
+      traceData.fileName = matchSource ? matchSource[1] : undefined;
+    }
+  }
+
+  // Extract line number
+  const match = stackEntry.match(/:(\d+):(\d+)/);
+  traceData.lineNumber = match ? +match[1] : undefined;
+
+  return traceData;
+};
+
+/**
  * Resolves the calling file name either from the provided source or a fallback method.
  * Excludes certain files like 'bundle.js' or undefined values.
  *
@@ -36,7 +108,11 @@ export const getCallingFile = (source?: string): string | undefined => {
   let callingFile: string | undefined =
     source ?? getCallingFileName() ?? 'Unknown Source';
 
-  if (callingFile?.includes('bundle.js') || callingFile === 'Unknown Source') {
+  if (
+    callingFile.includes('logging/helpers/files.helper.ts') ||
+    callingFile?.includes('bundle.js') ||
+    callingFile === 'Unknown Source'
+  ) {
     callingFile = undefined;
   }
 

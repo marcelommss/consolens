@@ -2,7 +2,7 @@ import { CLOCK_TYPE, LOG_TYPE, LogMessage, LogParams } from '../types/index';
 import { findSymbol, KEYWORD_TYPES } from '../icons';
 import { getTagColor } from '../tags';
 import { getLoggingConfiguration, initializeTags } from '../configurations';
-import { getCallingFile } from './files.helper';
+import { findDataFromTrace, getCallingFile } from './files.helper';
 import { addMessage, getAllMessages, getGroupMessages } from '../groups';
 
 /**
@@ -227,11 +227,9 @@ const prepareLog = (params: LogParams, baseColor: string) => {
   initializeTags();
   const config = getLoggingConfiguration();
 
-  // Get calling file with fallback to 'Unknown Source'
-  let callingFile: string | undefined =
+  const callingFile: string | undefined =
     getCallingFile(params.source) ?? 'Unknown Source';
-  if (callingFile.includes('files.helper.ts:2:22')) callingFile = undefined;
-  // Find the symbol or fallback to the default '🕒'
+
   const symbol =
     findSymbol({
       type: KEYWORD_TYPES.ALL,
@@ -269,6 +267,7 @@ const prepareLog = (params: LogParams, baseColor: string) => {
 
   return { data, styles, args: params.args };
 };
+
 /**
  * Logs an individual message to the console.
  * This function handles the actual logging for a given `LogMessage` object.
@@ -307,6 +306,15 @@ export const handleMessage = (message: LogMessage) => {
  */
 export const handleLog = (message: LogMessage) => {
   initializeTags();
+
+  // identify log information
+  const traceInfo = findDataFromTrace();
+  if (traceInfo.fileName && !message.source)
+    message.source = traceInfo.fileName;
+  if (traceInfo.lineNumber && !message.line)
+    message.line = traceInfo.lineNumber;
+  if (traceInfo.functionName && !message.functionName)
+    message.functionName = traceInfo.functionName;
 
   // Check if the message is part of a group or parent group
   if (message.group || message.parentGroup) {
