@@ -1,10 +1,4 @@
-import {
-  CLOCK_TYPE,
-  LOG_TYPE,
-  LogGroup,
-  LogMessage,
-  LogParams,
-} from '../types/index';
+import { CLOCK_TYPE, LOG_TYPE, LogMessage, LogParams } from '../types/index';
 import { findSymbol, KEYWORD_TYPES } from '../icons';
 import { getTagColor } from '../tags';
 import { getLoggingConfiguration, initializeTags } from '../configurations';
@@ -68,7 +62,7 @@ const createMessage = ({
       break;
   }
 
-  let data = `%c${displayDT} ${symbol}`;
+  let data = `%c${displayDT} ${symbol}%c`;
 
   if (context) data += `%c« ${context} »`;
 
@@ -87,8 +81,18 @@ const createMessage = ({
     data += `%c`;
   }
 
-  if (description)
-    data += `\n\t%cmessage:  ${hasMessageColor ? '%c%c' : '%c'}${description}`;
+  if (description) {
+    data += `${
+      context ||
+      source ||
+      line ||
+      functionName ||
+      isEffect ||
+      (tags && tags?.length > 0)
+        ? '\n'
+        : ''
+    }\t%cmessage:  ${hasMessageColor ? '%c%c' : '%c'}${description}`;
+  }
 
   if (hasArgs) data += `%c\n\t\t   args:%c  `;
 
@@ -115,7 +119,6 @@ const createMessage = ({
  */
 const createStyles = ({
   baseColor,
-  type,
   source,
   functionName,
   isEffect,
@@ -124,7 +127,6 @@ const createStyles = ({
   description,
   context,
   tags,
-  symbol,
   hasArgs,
 }: {
   baseColor: string;
@@ -142,6 +144,7 @@ const createStyles = ({
 }) => {
   const styles: string[] = [
     `color: ${baseColor}; font-weight: bold; font-size: 12px; line-height: 2.2; background-color: #ffffff12; border-radius: 16px; padding: 0px 10px; margin-top:2px`,
+    'border:none;',
   ];
 
   if (context)
@@ -225,8 +228,9 @@ const prepareLog = (params: LogParams, baseColor: string) => {
   const config = getLoggingConfiguration();
 
   // Get calling file with fallback to 'Unknown Source'
-  const callingFile = getCallingFile(params.source) ?? 'Unknown Source';
-
+  let callingFile: string | undefined =
+    getCallingFile(params.source) ?? 'Unknown Source';
+  if (callingFile.includes('files.helper.ts:2:22')) callingFile = undefined;
   // Find the symbol or fallback to the default '🕒'
   const symbol =
     findSymbol({
