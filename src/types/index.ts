@@ -1,6 +1,16 @@
 import Icons from '../data/icons.data';
 
 /**
+ * Enum representing console UI theme options
+ */
+export enum THEME {
+  /**
+   * The default UI theme for the console.
+   */
+  Default = 'DEFAULT',
+}
+
+/**
  * Enum representing different types of logs.
  * Useful for categorizing logs such as informational logs, warnings, and errors.
  */
@@ -39,6 +49,27 @@ export enum CLOCK_TYPE {
    * DISPLAY COMPLETE DATE AND TIME.
    */
   DATETIME = 'DATETIME',
+}
+
+/**
+ * Enum representing different group behavior options for displaying logs.
+ */
+export enum GROUP_BEHAVIOUR {
+  /**
+   * Group behaves like the standard console.group, logging each message as it comes.
+   */
+  DEFAULT = 'DEFAULT',
+
+  /**
+   * Immediately displays the group when it starts, showing only logs from that group and hiding other messages.
+   */
+  DISPLAY_ON_START = 'DISPLAY_ON_START',
+
+  /**
+   * Displays the group messages only after it has finished (requested), hiding the group's logs until the end.
+   * Other messages outside the group are shown instantly.
+   */
+  DISPLAY_ON_END = 'DISPLAY_ON_END',
 }
 
 /**
@@ -178,6 +209,11 @@ export interface LoggingSetup {
   interceptLogs: boolean;
 
   /**
+   * log in multiple lines to facilitate reading.
+   */
+  multiline?: boolean;
+
+  /**
    * Defines how the date and time should be displayed in log messages.
    * Options are CLOCK_TYPE.DATETIME, CLOCK_TYPE.DATE, and CLOCK_TYPE.TIME.
    */
@@ -197,6 +233,16 @@ export interface LoggingSetup {
    * Default border color for callouts.
    */
   defaultCalloutBorder?: string;
+
+  /**
+   * Default group behaviour.
+   */
+  defaultGroupBehaviour?: GROUP_BEHAVIOUR;
+
+  /**
+   * Default color theme.
+   */
+  defaultTheme?: THEME.Default;
 }
 
 /**

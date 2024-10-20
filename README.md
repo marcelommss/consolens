@@ -19,10 +19,20 @@
 
 ---
 
+### VS CODE INTEGRATION
+
+We have recently launched our cool snippets extensions on VS CODE:
+   `consolens-snippets`
+
+https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
+
+---
+
 ## Table of Contents
 
 - [Consolens](#consolens)
   - [Features](#features)
+    - [VS CODE INTEGRATION](#vs-code-integration)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
@@ -49,6 +59,7 @@
       - [setupLogging](#setuplogging)
         - [CLOCK\_TYPE](#clock_type)
   - [Full Example](#full-example)
+  - [UPCOMING FEATURES](#upcoming-features)
   - [LICENCE](#licence)
   - [Contributions](#contributions)
   - [Questions or Feedback?](#questions-or-feedback)
@@ -373,6 +384,21 @@ logDevInfo({
   tags: ['start', 'app'],
 });
 ```
+
+---
+
+## UPCOMING FEATURES
+
+We are constantly improving our package, so these are a few things that what you could expect for the next releases:
+
+- Automatic informations(source, line, functions)
+- Framework hooks identification
+- Framework snippets for VS Code
+- Theming 🎨
+
+And of course:
+- guide website (work in-progress)
+- codelens-examples repository
 
 ---
 

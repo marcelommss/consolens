@@ -1,6 +1,7 @@
 import { loadTagColors } from './tags';
 import {
   CLOCK_TYPE,
+  GROUP_BEHAVIOUR,
   LOG_HEADER_TYPE,
   LoggingConfiguration,
   LoggingSetup,
@@ -16,6 +17,7 @@ const masterLoggingConfig: LoggingConfiguration = {
   defaultHeaderSize: LOG_HEADER_TYPE.H2,
   defaultCalloutSize: LOG_HEADER_TYPE.H3,
   defaultCalloutBorder: '#FFFFFF55',
+  defaultGroupBehaviour: GROUP_BEHAVIOUR.DISPLAY_ON_END,
 };
 
 /**
