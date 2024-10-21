@@ -8,11 +8,11 @@
 
 - **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
 - **Improved console UI**: Massivelly improves the readability of your logs with a much cleanner, space UI.
-- **Enhanced Grouping!**: Multi-Group log messages with custom behaviours!
+- **Enhanced Grouping!**: Enhanced grouping with multiple groups amd multiple levels, choose the behaviour that works best for you!
     Enhanced grouping of three types:
-  - default: as common console.group, all messages are displayed inside a group when grouping starts
   - at start: only show group messages, holding other messages until the grouping ends
   - at end: show group messages only when the group ends and showGroup is triggered
+  - traditional: as common console.group, all messages are displayed inside a group when grouping starts
 - **Customizable output**: Modify colors, tags, and formatting for logs.
 - **Development logging**: Choose which logs are going to appear only in  development environments.
 - **Tagging**: Auto-tag logs with colors for easy identification.

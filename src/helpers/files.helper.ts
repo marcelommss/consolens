@@ -51,7 +51,6 @@ const captureStackTrace = (): string[] => {
 export const findDataFromTrace = (): TraceInformation => {
   const traceData: TraceInformation = {};
   const entries = captureStackTrace();
-  console.log(entries);
   if (entries.length === 0) return traceData;
   let sourceIndex = 0;
   entries.forEach((entry, index) => {
@@ -62,7 +61,6 @@ export const findDataFromTrace = (): TraceInformation => {
       sourceIndex = index + 2;
   });
 
-  console.log('sourceIndex', sourceIndex);
   const stackEntry = entries[sourceIndex];
 
   // Extract the function name

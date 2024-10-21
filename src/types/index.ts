@@ -58,18 +58,18 @@ export enum GROUP_BEHAVIOUR {
   /**
    * Group behaves like the standard console.group, logging each message as it comes.
    */
-  DEFAULT = 'DEFAULT',
+  TRADITIONAL = 'TRADITIONAL',
 
   /**
    * Immediately displays the group when it starts, showing only logs from that group and hiding other messages.
    */
-  DISPLAY_ON_START = 'DISPLAY_ON_START',
+  // DISPLAY_ON_START = 'DISPLAY_ON_START',
 
   /**
    * Displays the group messages only after it has finished (requested), hiding the group's logs until the end.
    * Other messages outside the group are shown instantly.
    */
-  DISPLAY_ON_END = 'DISPLAY_ON_END',
+  // DISPLAY_ON_END = 'DISPLAY_ON_END',
 }
 
 /**

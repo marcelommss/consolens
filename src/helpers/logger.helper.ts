@@ -1,4 +1,10 @@
-import { CLOCK_TYPE, LOG_TYPE, LogMessage, LogParams } from '../types/index';
+import {
+  CLOCK_TYPE,
+  GROUP_BEHAVIOUR,
+  LOG_TYPE,
+  LogMessage,
+  LogParams,
+} from '../types/index';
 import { findSymbol, KEYWORD_TYPES } from '../icons';
 import { getTagColor } from '../tags';
 import { getLoggingConfiguration, initializeTags } from '../configurations';
@@ -316,8 +322,12 @@ export const handleLog = (message: LogMessage) => {
   if (traceInfo.functionName && !message.functionName)
     message.functionName = traceInfo.functionName;
 
+  const config = getLoggingConfiguration();
   // Check if the message is part of a group or parent group
-  if (message.group || message.parentGroup) {
+  if (
+    config.defaultGroupBehaviour !== GROUP_BEHAVIOUR.TRADITIONAL &&
+    (message.group || message.parentGroup)
+  ) {
     addMessage(message);
     // Do not log the message immediately; it will be handled when the group is logged
     return;

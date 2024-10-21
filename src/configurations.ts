@@ -17,7 +17,7 @@ const masterLoggingConfig: LoggingConfiguration = {
   defaultHeaderSize: LOG_HEADER_TYPE.H2,
   defaultCalloutSize: LOG_HEADER_TYPE.H3,
   defaultCalloutBorder: '#FFFFFF55',
-  defaultGroupBehaviour: GROUP_BEHAVIOUR.DISPLAY_ON_END,
+  defaultGroupBehaviour: GROUP_BEHAVIOUR.TRADITIONAL,
 };
 
 /**
