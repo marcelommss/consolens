@@ -412,14 +412,36 @@ logDevInfo({
 
 We are constantly improving our package, so these are a few things that what you could expect for the next releases:
 
-- Automatic informations(source, line, functions)
-- Framework hooks identification
-- Framework snippets for VS Code
-- Theming 🎨
+☐ Setup configuration
+  ☐ complete configurations
+  ☐ Theming 🎨
 
-And of course:
-- guide website (work in-progress)
-- codelens-examples repository
+☐ Fixes and know issues
+  ☐ default console log tracing
+  ☐ file openning
+
+☐ enhanced grouping
+  ☐ Visual UI
+  ✅ TRADITIONAL
+  ☐ DISPLAY_ON_START
+  ☐ DISPLAY_ON_END
+
+✅ snippets for VS Code 
+  ✅ consoles-snippets for VS Code (released) 
+  ☐ framework focused snippets 
+
+☐ Automatic informations(source, line, functions)
+  ☐ Framework hooks identification
+
+☐ Simples log(without typed parameters / any)
+  ✅ message and args recognition
+
+
+We are also working on other repos to create:
+☐ a guide website (work in-progress)
+☐ a codelens-examples repository
+☐ a Chrome extension
+  ☐ consolens visual to all logs(for all sites) 
 
 ---
 
