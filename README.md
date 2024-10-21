@@ -6,12 +6,12 @@
 
 ---
 
-**!important!**
-### Breaking Changes 
+
+#### **Important‼️** - Breaking Changes 
 
 We have moved description property to message, so it could be more logically aligned to console information purposes:
-- log.**description** parameter has changed to log.**message**
-- 
+| log.**description** | parameter has changed to log.**message** |
+  
 ---
 
 ## Features
@@ -45,7 +45,7 @@ https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
 ## Table of Contents
 
 - [Consolens](#consolens)
-    - [Breaking Changes](#breaking-changes)
+      - [**Important‼️** - Breaking Changes](#important️---breaking-changes)
   - [Features](#features)
     - [VS CODE INTEGRATION](#vs-code-integration)
   - [Table of Contents](#table-of-contents)
@@ -64,7 +64,7 @@ https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
   - [TAGS](#tags)
     - [How Tags Work](#how-tags-work)
     - [Example:](#example-1)
-  - [Dynamic Symbols](#dynamic-symbols)
+  - [Dynamic Symbols ⭐](#dynamic-symbols-)
   - [Grouping Logs](#grouping-logs)
     - [Displaying Groups](#displaying-groups)
     - [How it works](#how-it-works)
@@ -217,6 +217,7 @@ logInfo({
 ```
 
 #### Dev functions
+
 This functions will only log during development mode.
 
 ```typescript
@@ -290,7 +291,7 @@ Each tag receives a dynamic color. Recurring tags keeps the same color everytime
 
 ---
 
-## Dynamic Symbols
+## Dynamic Symbols ⭐
 
 **Consolens** allows you to enhance your log messages with **Dynamic Symbols**, which are automatically selected based on the context, log type, source file, functions name, message or custom tags provided. This makes it easier to understand the nature of the log at a glance, whether it's informational, a warning, or an error.
 
@@ -432,7 +433,6 @@ We are constantly improving our package, so these are a few things that what you
     ☐ at least 4 options of themes
 
 ☐ enhanced grouping
-  ☐ Visual UI
   ✅ TRADITIONAL
   ☐ DISPLAY_ON_START
   ☐ DISPLAY_ON_END
