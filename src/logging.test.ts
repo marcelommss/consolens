@@ -34,7 +34,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is an info log',
+        message: 'This is an info log',
         args: ['extraArg1', 'extraArg2'],
         isEffect: false,
         messageColor: '#ff0000',
@@ -46,7 +46,7 @@ describe('Logging functions', () => {
       const logMessage = consoleInfoSpy.mock.calls[0][0]; // Get the first argument (data string)
       expect(logMessage).toContain('sourceFile'); // Ensure sourceFile is present
       expect(logMessage).toContain('myFunction'); // Ensure functionName is present
-      expect(logMessage).toContain('This is an info log'); // Ensure description is present
+      expect(logMessage).toContain('This is an info log'); // Ensure the message is present
       expect(logMessage).toMatch(/\d{2}:\d{2}:\d{2}/); // Ensure timestamp is present
 
       // Ensure extra arguments are logged at the correct index (styles are in between)
@@ -60,7 +60,7 @@ describe('Logging functions', () => {
 
     it('should log without a source and function name when they are undefined (ignoring styles)', () => {
       const params = {
-        description: 'This is a log without source or function name',
+        message: 'This is a log without source or function name',
         args: ['extraArg1'],
         isEffect: false,
         messageColor: '#00ff00',
@@ -73,7 +73,7 @@ describe('Logging functions', () => {
       expect(logMessage).not.toContain('sourceFile'); // Ensure sourceFile is not present
       expect(logMessage).toContain(
         'This is a log without source or function name'
-      ); // Ensure description is present
+      ); // Ensure message is present
       expect(logMessage).toMatch(/\d{2}:\d{2}:\d{2}/); // Ensure timestamp is present
 
       // Ensure extra arguments are logged at the correct index
@@ -88,7 +88,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is a warning log',
+        message: 'This is a warning log',
         args: ['additionalArg1', 'additionalArg2'],
       };
 
@@ -98,7 +98,7 @@ describe('Logging functions', () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         expect.stringMatching(/\d{2}:\d{2}:\d{2}/), // Timestamp pattern (HH:MM:SS)
         '[sourceFile]', // Source string
-        'This is a warning log', // Description
+        'This is a warning log', // message
         'additionalArg1', // First additional argument
         'additionalArg2' // Second additional argument
       );
@@ -110,7 +110,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is an error log',
+        message: 'This is an error log',
         args: ['additionalArg1', 'additionalArg2'],
       };
 
@@ -120,7 +120,7 @@ describe('Logging functions', () => {
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         expect.stringMatching(/\d{2}:\d{2}:\d{2}/), // Timestamp pattern (HH:MM:SS)
         '[sourceFile]', // Source string
-        'This is an error log', // Description
+        'This is an error log', // message
         'additionalArg1', // First additional argument
         'additionalArg2' // Second additional argument
       );
@@ -132,7 +132,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is an info log',
+        message: 'This is an info log',
         args: [],
       };
 
@@ -145,7 +145,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is a warning log',
+        message: 'This is a warning log',
         args: [],
       };
 
@@ -158,7 +158,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is an error log',
+        message: 'This is an error log',
         args: [],
       };
 
@@ -175,7 +175,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is a dev log',
+        message: 'This is a dev log',
         args: [],
       };
 
@@ -190,7 +190,7 @@ describe('Logging functions', () => {
       const params = {
         source: 'sourceFile',
         functionName: 'myFunction',
-        description: 'This is a dev log',
+        message: 'This is a dev log',
         args: [],
       };
 

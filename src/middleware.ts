@@ -52,7 +52,7 @@ const getSourceFromStack = (): string => {
 /**
  * Intercepts the default console.log, console.warn, and console.error functions,
  * and redirects them to the logging package's log functions.
- * Extracts the source and description from the original logs and avoids recursion.
+ * Extracts the source and message from the original logs and avoids recursion.
  */
 const interceptConsoleLogs = (): void => {
   // Backup the original console functions
@@ -64,7 +64,7 @@ const interceptConsoleLogs = (): void => {
   // Wraps console.log to avoid recursion and extract more information
   console.log = (...args: any[]) => {
     const source = getSourceFromStack();
-    const description =
+    const message =
       typeof args[0] === 'string' ? args[0] : 'Intercepted log message';
     const restArgs = args.slice(1); // Get remaining args
 
@@ -75,7 +75,7 @@ const interceptConsoleLogs = (): void => {
         type: LOG_TYPE.INFORMATION,
         source,
         functionName: 'console.log',
-        description,
+        message,
         args: restArgs,
         isFromDefaultConsole: true,
       });
@@ -85,7 +85,7 @@ const interceptConsoleLogs = (): void => {
   // Wraps console.warn to avoid recursion and extract more information
   console.warn = (...args: any[]) => {
     const source = getSourceFromStack();
-    const description =
+    const message =
       typeof args[0] === 'string' ? args[0] : 'Intercepted warning message';
     const restArgs = args.slice(1); // Get remaining args
 
@@ -96,7 +96,7 @@ const interceptConsoleLogs = (): void => {
         type: LOG_TYPE.WARNING,
         source,
         functionName: 'console.warn',
-        description,
+        message,
         args: restArgs,
         isFromDefaultConsole: true,
       });
@@ -106,7 +106,7 @@ const interceptConsoleLogs = (): void => {
   // Wraps console.error to avoid recursion and extract more information
   console.error = (...args: any[]) => {
     const source = getSourceFromStack();
-    const description =
+    const message =
       typeof args[0] === 'string' ? args[0] : 'Intercepted error message';
     const restArgs = args.slice(1); // Get remaining args
 
@@ -117,7 +117,7 @@ const interceptConsoleLogs = (): void => {
         type: LOG_TYPE.ERROR,
         source,
         functionName: 'console.error',
-        description,
+        message,
         args: restArgs,
         isFromDefaultConsole: true,
       });

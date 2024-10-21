@@ -38,7 +38,7 @@ const createMessage = ({
   functionName,
   isEffect,
   hasMessageColor,
-  description,
+  message,
   line,
   symbol = '',
   context,
@@ -50,7 +50,7 @@ const createMessage = ({
   functionName?: string;
   isEffect?: boolean;
   hasMessageColor?: boolean;
-  description?: string;
+  message?: string;
   line?: number;
   symbol?: string;
   context?: string;
@@ -94,7 +94,7 @@ const createMessage = ({
     data += `%c`;
   }
 
-  if (description) {
+  if (message) {
     data += `${
       context ||
       source ||
@@ -104,7 +104,7 @@ const createMessage = ({
       (tags && tags?.length > 0)
         ? '\n'
         : ''
-    }\t%cmessage:  ${hasMessageColor ? '%c%c' : '%c'}${description}`;
+    }\t%cmessage:  ${hasMessageColor ? '%c%c' : '%c'}${message}`;
   }
 
   if (hasArgs) data += `%c\n\t\t   args:%c  `;
@@ -114,7 +114,7 @@ const createMessage = ({
 
 /**
  * Creates the styles array based on the log type and parameters.
- * Handles styling for the description, symbols, and other log properties.
+ * Handles styling for the message, symbols, and other log properties.
  *
  * @param {string} baseColor - The base color for the log type (e.g., red for errors, orange for warnings)
  * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
@@ -123,7 +123,7 @@ const createMessage = ({
  * @param {boolean} [isEffect] - Whether the log is related to a side effect
  * @param {string} [messageColor] - Color for the log message description
  * @param {number} [line] - The line number where the log occurred
- * @param {string} [description] - The description of the log message
+ * @param {string} [message] - The log message
  * @param {string} [symbol] - The symbol associated with the log message
  * @param {string} [context] - The context of this message
  * @param {string[]} [tags] - Tags for this message
@@ -137,7 +137,7 @@ const createStyles = ({
   isEffect,
   messageColor,
   line,
-  description,
+  message,
   context,
   tags,
   hasArgs,
@@ -149,7 +149,7 @@ const createStyles = ({
   isEffect?: boolean;
   messageColor?: string;
   line?: number;
-  description?: string;
+  message?: string;
   symbol?: string;
   context?: string;
   tags?: string[];
@@ -195,8 +195,8 @@ const createStyles = ({
     styles.push('background: none; border-radius: none;');
   }
 
-  // Apply styling for the description, if present
-  if (description) {
+  // Apply styling for the message, if present
+  if (message) {
     styles.push(
       'color: #FFFFFF55;',
       'opacity:1;font-weight: bold; padding: 5px 0;'
@@ -220,7 +220,7 @@ const createStyles = ({
  * This function centralizes the logic for assembling the log's formatted message, styles, and arguments.
  * It handles the calling file, symbols, tags, and optional arguments, and ensures consistency across all log types.
  *
- * @param {LogParams} params - The logging parameters including source, function name, description, tags, etc.
+ * @param {LogParams} params - The logging parameters including source, function name, message, tags, etc.
  * @param {string} baseColor - The base color for the log style (used for different log types like INFO, WARNING, ERROR).
  * @param {boolean} [datetimeDisplayType=DATETIME] - Flag to determine which date and time type should be included in the log. Defaults to datetime.
  * @returns {{ data: string, styles: string[], args: any[] }} - Returns an object containing the formatted log message (`data`),
@@ -230,7 +230,7 @@ const createStyles = ({
  * const { data, styles, args } = prepareLog({
  *   source: 'App.tsx',
  *   functionName: 'fetchData',
- *   description: 'Fetching data from API...',
+ *   message: 'Fetching data from API...',
  *   tags: ['api', 'fetch']
  * }, 'lightgray');
  *
@@ -246,7 +246,7 @@ const prepareLog = (params: LogParams, baseColor: string) => {
   const symbol =
     findSymbol({
       type: KEYWORD_TYPES.ALL,
-      args: [params.functionName, callingFile, params.description],
+      args: [params.functionName, callingFile, params.message],
     }) || '🕒';
 
   const hasArgs = params.args !== undefined && params.args?.length > 0;
@@ -255,7 +255,7 @@ const prepareLog = (params: LogParams, baseColor: string) => {
     functionName: params.functionName,
     isEffect: params.isEffect,
     hasMessageColor: !!params.messageColor,
-    description: params.description,
+    message: params.message,
     line: params.line,
     symbol,
     context: params.context,
@@ -271,7 +271,7 @@ const prepareLog = (params: LogParams, baseColor: string) => {
     isEffect: params.isEffect,
     messageColor: params.messageColor,
     line: params.line,
-    description: params.description,
+    message: params.message,
     context: params.context,
     tags: params.tags,
     symbol,

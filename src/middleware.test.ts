@@ -20,7 +20,7 @@ describe('Console Log Interception Middleware', () => {
     expect(logDevInfo).toHaveBeenCalledWith({
       source: expect.any(String), // Source file and line number
       functionName: 'console.log',
-      description: 'Test log message',
+      message: 'Test log message',
       args: [{ additionalData: true }],
     });
   });
@@ -31,7 +31,7 @@ describe('Console Log Interception Middleware', () => {
     expect(logWarning).toHaveBeenCalledWith({
       source: expect.any(String), // Source file and line number
       functionName: 'console.warn',
-      description: 'Test warning message',
+      message: 'Test warning message',
       args: [{ warningData: true }],
     });
   });
@@ -42,7 +42,7 @@ describe('Console Log Interception Middleware', () => {
     expect(logError).toHaveBeenCalledWith({
       source: expect.any(String), // Source file and line number
       functionName: 'console.error',
-      description: 'Test error message',
+      message: 'Test error message',
       args: [{ errorData: true }],
     });
   });
@@ -58,14 +58,14 @@ describe('Console Log Interception Middleware', () => {
     logDevInfo({
       source: 'TestSource',
       functionName: 'logDevInfo',
-      description: 'Simulated internal log',
+      message: 'Simulated internal log',
       args: [],
     });
 
     expect(originalLog).toHaveBeenCalledWith({
       source: 'TestSource',
       functionName: 'logDevInfo',
-      description: 'Simulated internal log',
+      message: 'Simulated internal log',
       args: [],
     });
 
@@ -83,14 +83,14 @@ describe('Console Log Interception Middleware', () => {
     logWarning({
       source: 'TestSource',
       functionName: 'logWarning',
-      description: 'Simulated internal warning',
+      message: 'Simulated internal warning',
       args: [],
     });
 
     expect(originalWarn).toHaveBeenCalledWith({
       source: 'TestSource',
       functionName: 'logWarning',
-      description: 'Simulated internal warning',
+      message: 'Simulated internal warning',
       args: [],
     });
 
@@ -108,14 +108,14 @@ describe('Console Log Interception Middleware', () => {
     logError({
       source: 'TestSource',
       functionName: 'logError',
-      description: 'Simulated internal error',
+      message: 'Simulated internal error',
       args: [],
     });
 
     expect(originalError).toHaveBeenCalledWith({
       source: 'TestSource',
       functionName: 'logError',
-      description: 'Simulated internal error',
+      message: 'Simulated internal error',
       args: [],
     });
 

@@ -11,39 +11,39 @@ describe('Group functionality', () => {
   test('should add a message to a new top-level group', () => {
     const message: LogMessage = {
       group: 'group1',
-      description: 'Test Description 1', // Correct field from LogMessage
+      message: 'Test Message 1', // Correct field from LogMessage
       type: LOG_TYPE.INFORMATION,
     };
     addMessage(message);
 
     const groupMessages = getGroupMessages('group1');
     expect(groupMessages).toHaveLength(1);
-    expect(groupMessages[0].description).toBe('Test Description 1');
+    expect(groupMessages[0].message).toBe('Test Message 1');
   });
 
   test('should add a message to a parent group and a subgroup', () => {
     const message: LogMessage = {
       group: 'subgroup1',
       parentGroup: 'parentGroup',
-      description: 'Subgroup Description',
+      message: 'Subgroup Description',
       type: LOG_TYPE.INFORMATION,
     };
     addMessage(message);
 
     const groupMessages = getGroupMessages('subgroup1');
     expect(groupMessages).toHaveLength(1);
-    expect(groupMessages[0].description).toBe('Subgroup Description');
+    expect(groupMessages[0].message).toBe('Subgroup Description');
   });
 
   test('should add multiple messages to the same group', () => {
     const message1: LogMessage = {
       group: 'group2',
-      description: 'Test Description 1',
+      message: 'Test Message 1',
       type: LOG_TYPE.INFORMATION,
     };
     const message2: LogMessage = {
       group: 'group2',
-      description: 'Test Description 2',
+      message: 'Test Message 2',
       type: LOG_TYPE.ERROR, // Different type
     };
     addMessage(message1);
@@ -51,19 +51,19 @@ describe('Group functionality', () => {
 
     const groupMessages = getGroupMessages('group2');
     expect(groupMessages).toHaveLength(2);
-    expect(groupMessages[0].description).toBe('Test Description 1');
-    expect(groupMessages[1].description).toBe('Test Description 2');
+    expect(groupMessages[0].message).toBe('Test Message 1');
+    expect(groupMessages[1].message).toBe('Test Message 2');
   });
 
   test('should return all messages from all groups', () => {
     const message1: LogMessage = {
       group: 'group1',
-      description: 'Test Description 1',
+      message: 'Test Message 1',
       type: LOG_TYPE.INFORMATION,
     };
     const message2: LogMessage = {
       group: 'group2',
-      description: 'Test Description 2',
+      message: 'Test Message 2',
       type: LOG_TYPE.WARNING,
     };
     addMessage(message1);
@@ -71,21 +71,21 @@ describe('Group functionality', () => {
 
     const allMessages = getAllMessages();
     expect(allMessages).toHaveLength(2);
-    expect(allMessages[0].description).toBe('Test Description 1');
-    expect(allMessages[1].description).toBe('Test Description 2');
+    expect(allMessages[0].message).toBe('Test Message 1');
+    expect(allMessages[1].message).toBe('Test Message 2');
   });
 
   test('should handle subgroups correctly', () => {
     const message1: LogMessage = {
       group: 'subgroup1',
       parentGroup: 'group1',
-      description: 'Subgroup Description 1',
+      message: 'Subgroup Message 1',
       type: LOG_TYPE.INFORMATION,
     };
     const message2: LogMessage = {
       group: 'subgroup2',
       parentGroup: 'subgroup1',
-      description: 'Subgroup Description 2',
+      message: 'Subgroup Message 2',
       type: LOG_TYPE.ERROR,
     };
 
@@ -96,9 +96,9 @@ describe('Group functionality', () => {
     const groupMessages2 = getGroupMessages('subgroup2');
 
     expect(groupMessages1).toHaveLength(1);
-    expect(groupMessages1[0].description).toBe('Subgroup Description 1');
+    expect(groupMessages1[0].message).toBe('Subgroup Message 1');
 
     expect(groupMessages2).toHaveLength(1);
-    expect(groupMessages2[0].description).toBe('Subgroup Description 2');
+    expect(groupMessages2[0].message).toBe('Subgroup Message 2');
   });
 });

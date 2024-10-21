@@ -33,13 +33,13 @@ export function setupLogging(setupConfig: LoggingSetup): void {
 }
 
 /**
- * Logs informational messages with optional metadata such as source, function name, description, and more.
+ * Logs informational messages with optional metadata such as source, function name, message, and more.
  *
  * @param {LogParams} params - The logging parameters
  * @param {string} [params.source] - The source file or component emitting the log
  * @param {string} [params.functionName] - The name of the function that generated the log
  * @param {boolean} [params.isEffect] - Whether this log is related to a side effect
- * @param {string} [params.description] - A description of the log message
+ * @param {string} [params.message] - A description of the log message
  * @param {any[]} [params.args] - Additional arguments to be logged
  * @param {string} [params.messageColor] - Color for the log message description
  * @param {number} [params.line] - The line number where the log occurred
@@ -55,13 +55,13 @@ const logInfo = (params: LogParams) => {
 };
 
 /**
- * Logs warning messages with optional metadata such as source, function name, line number, description, and more.
+ * Logs warning messages with optional metadata such as source, function name, line number, message, and more.
  *
  * @param {LogParams} params - The logging parameters
  * @param {string} [params.source] - The source file or component emitting the log
  * @param {string} [params.functionName] - The name of the function that generated the log
  * @param {boolean} [params.isEffect] - Whether this log is related to a side effect
- * @param {string} [params.description] - A description of the warning message
+ * @param {string} [params.message] - A description of the warning message
  * @param {any[]} [params.args] - Additional arguments to be logged
  * @param {string} [params.messageColor] - Color for the warning message description
  * @param {number} [params.line] - The line number where the log occurred
@@ -77,13 +77,13 @@ const logWarning = (params: LogParams) => {
 };
 
 /**
- * Logs error messages with optional metadata such as source, function name, line number, description, and more.
+ * Logs error messages with optional metadata such as source, function name, line number, message, and more.
  *
  * @param {LogParams} params - The logging parameters
  * @param {string} [params.source] - The source file or component emitting the log
  * @param {string} [params.functionName] - The name of the function that generated the log
  * @param {boolean} [params.isEffect] - Whether this log is related to a side effect
- * @param {string} [params.description] - A description of the error message
+ * @param {string} [params.message] - A description of the error message
  * @param {any[]} [params.args] - Additional arguments to be logged
  * @param {string} [params.messageColor] - Color for the log message description (ignored in error logs)
  * @param {number} [params.line] - The line number where the log occurred

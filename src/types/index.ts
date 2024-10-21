@@ -72,13 +72,13 @@ export enum GROUP_BEHAVIOUR {
 
 /**
  * Interface for logging parameters.
- * Provides structured data for logging functions such as source, function name, and description.
+ * Provides structured data for logging functions such as source, function name, and message.
  */
 export interface LogParams {
   /**
-   * A description of the log message, explaining what it represents.
+   * The log message.
    */
-  description?: string;
+  message?: string;
 
   /**
    * Additional arguments or data to log (e.g., responses, objects).

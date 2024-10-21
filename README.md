@@ -4,6 +4,14 @@
 
 ![consolens example](https://github.com/marcelommss/consolens/blob/main/consolensexample.png?raw=true)
 
+---
+
+### Breaking Changes
+
+log.**description** parameter has changed to log.**message**
+
+---
+
 ## Features
 
 - **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
@@ -35,6 +43,7 @@ https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
 ## Table of Contents
 
 - [Consolens](#consolens)
+    - [Breaking Changes](#breaking-changes)
   - [Features](#features)
     - [VS CODE INTEGRATION](#vs-code-integration)
   - [Table of Contents](#table-of-contents)
@@ -122,7 +131,7 @@ To intercept default console entries, you must call setupLogging on your system 
 
 All logging functions have the following optional parameters that help format the console entry UI:
 
-- **`description?`**: A string providing a description of the log message, explaining its purpose or context.
+- **`message?`**: A string providing a log message.
 
 - **`args?`**: Additional arguments or data to log, such as responses, objects, or any other relevant information. Can accept any type or an array of any types.
 
@@ -176,7 +185,7 @@ import { log } from 'consolens';
 // Simple information log
 log({
   type: LOG_TYPE.INFORMATION
-  description: 'paginationData has changed',
+  message: 'paginationData has changed',
   args: [paginationData]
 });
 
@@ -185,12 +194,12 @@ log({
   type: LOG_TYPE.WARNING
   source: 'Login.tsx',
   functionName: 'authentication',
-  description: 'Authenticate user failed',
+  message: 'Authenticate user failed',
 });
 ```
 
 #### logInfo, logWarning, logError
-Logs informational messages with optional metadata such as source, function name, description, and more.
+Logs informational messages with optional metadata such as source, function name, message, and more.
 
 ```typescript
 import { logInfo, logWarning, logError } from 'consolens';
@@ -198,7 +207,7 @@ import { logInfo, logWarning, logError } from 'consolens';
 // this will create a consolens log
 logInfo({
   isEffect: true,
-  description: 'Application initialized successfully!',
+  message: 'Application initialized successfully!',
   tags: [loading, error],
 });
 ```
@@ -209,21 +218,21 @@ This functions will only log during development mode.
 ```typescript
 import { logDevInfo, logDevWarning, logDevError } from 'consolens';
 
-// Information log: Logs informational messages with optional metadata such as source, function name, description, and more.
+// Information log: Logs informational messages with optional metadata such as source, function name, message, and more.
 logDevInfo({
-  description: 'Application initialized successfully!',
+  message: 'Application initialized successfully!',
   tags: ['init', 'app'],
 });
 
-// Warning log: Logs warnings with metadata such as source, function name, description, and more.
+// Warning log: Logs warnings with metadata such as source, function name, message, and more.
 logDevWarning({
-  description: 'Data fetch returned incomplete results.',
+  message: 'Data fetch returned incomplete results.',
   tags: ['fetch', dataObject],
 });
 
 // Error log: Logs errors with metadata, providing detailed information and arguments.
 logDevError({
-  description: 'Error processing data.',
+  message: 'Error processing data.',
   args: [error],
   tags: ['error', 'processing'],
 });
@@ -246,7 +255,7 @@ You can create only one context, that is always a yellow chip.
 
 ```typescript
 logInfo({
-  description: 'User authentication failed.',
+  message: 'User authentication failed.',
   context: 'auth',
 });
 ```
@@ -266,7 +275,7 @@ Tags in **Consolens** allow you to categorize and highlight specific log entries
 
 ```typescript
 logDevInfo({
-  description: 'Data successfully fetched from API.',
+  message: 'Data successfully fetched from API.',
   tags: ['api', 'fetch', 'data'],
 });
 ```
@@ -279,7 +288,7 @@ Each tag receives a dynamic color. Recurring tags keeps the same color everytime
 
 ## Dynamic Symbols
 
-**Consolens** allows you to enhance your log messages with **Dynamic Symbols**, which are automatically selected based on the context, log type, source file, functions name, description or custom tags provided. This makes it easier to understand the nature of the log at a glance, whether it's informational, a warning, or an error.
+**Consolens** allows you to enhance your log messages with **Dynamic Symbols**, which are automatically selected based on the context, log type, source file, functions name, message or custom tags provided. This makes it easier to understand the nature of the log at a glance, whether it's informational, a warning, or an error.
 
 - **Icons are automatically chosen** based on certain keywords, tags, or the log type (INFO, WARNING, ERROR).
 - Icons help you visually distinguish log entries, making the console output more readable and engaging.
@@ -388,7 +397,7 @@ logHeader({
 
 // Log some information
 logDevInfo({
-  description: 'Application has started successfully.',
+  message: 'Application has started successfully.',
   tags: ['start', 'app'],
 });
 ```
