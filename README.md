@@ -431,7 +431,6 @@ We are constantly improving our package, so these are a few things that what you
   ☐ Theming 🎨
     ☐ at least 4 options of themes
 
-
 ☐ enhanced grouping
   ☐ Visual UI
   ✅ TRADITIONAL
