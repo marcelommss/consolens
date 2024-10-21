@@ -6,9 +6,11 @@
 
 ---
 
-### Breaking Changes
+**!important!**
+### Breaking Changes 
 
-log.**description** parameter has changed to log.**message**
+We have moved description property to message, so it could be more logical aligned to console information purposes:
+- log.**description** parameter has changed to log.**message**
 
 ---
 
