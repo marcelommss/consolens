@@ -2,6 +2,7 @@ import { LOG_HEADER_TYPE, LOG_TYPE } from './options';
 
 export * from './options';
 export * from './configuration';
+export * from '../data/icons.data';
 
 /**
  * Interface for logging parameters.
