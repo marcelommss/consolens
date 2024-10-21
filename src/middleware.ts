@@ -5,18 +5,18 @@ import { LOG_HEADER_TYPE, LOG_TYPE } from './types/index';
 
 // Variable to store the original console.log
 let originalLog: typeof console.log | null = null;
+let originalWarn: typeof console.warn | null = null;
+let originalError: typeof console.error | null = null;
 
 /**
  * Creates and stores the original console.log if it hasn't been created already.
  */
 const createOriginalLog = (): void => {
-  if (
-    !originalLog &&
-    typeof console !== 'undefined' &&
-    typeof console.log === 'function'
-  ) {
-    originalLog = console.log; // Store the original console.log function
-  }
+  if (typeof console === 'undefined' || typeof console.log !== 'function')
+    return;
+  if (!originalLog) originalLog = console.log;
+  if (!originalWarn) originalWarn = console.warn;
+  if (!originalError) originalError = console.error;
 };
 
 /**
@@ -26,6 +26,24 @@ const createOriginalLog = (): void => {
 const getOriginalLog = (): typeof console.log => {
   createOriginalLog(); // Ensure originalLog is created before returning it
   return originalLog as typeof console.log;
+};
+
+/**
+ * Gets the original console.warn.
+ * @returns {typeof console.warn} The original console.warn function.
+ */
+const getOriginalWarn = (): typeof console.warn => {
+  createOriginalLog(); // Ensure originalLog is created before returning it
+  return originalWarn as typeof console.warn;
+};
+
+/**
+ * Gets the original console.error.
+ * @returns {typeof console.error} The original console.error function.
+ */
+const getOriginalError = (): typeof console.error => {
+  createOriginalLog(); // Ensure originalLog is created before returning it
+  return originalError as typeof console.error;
 };
 
 /**
@@ -57,9 +75,6 @@ const getSourceFromStack = (): string => {
 const interceptConsoleLogs = (): void => {
   // Backup the original console functions
   createOriginalLog(); // Ensure originalLog is created
-  const originalLog = console.log;
-  const originalWarn = console.warn;
-  const originalError = console.error;
 
   // Wraps console.log to avoid recursion and extract more information
   console.log = (...args: any[]) => {
@@ -68,8 +83,12 @@ const interceptConsoleLogs = (): void => {
       typeof args[0] === 'string' ? args[0] : 'Intercepted log message';
     const restArgs = args.slice(1); // Get remaining args
 
-    if (new Error().stack?.includes('logDevInfo')) {
-      originalLog(...args); // Call the original console.log
+    if (
+      new Error().stack?.includes('logDevInfo') ||
+      new Error().stack?.includes('logInfo') ||
+      new Error().stack?.includes('log')
+    ) {
+      originalLog?.(...args); // Call the original console.log
     } else {
       handleMessage({
         type: LOG_TYPE.INFORMATION,
@@ -89,8 +108,12 @@ const interceptConsoleLogs = (): void => {
       typeof args[0] === 'string' ? args[0] : 'Intercepted warning message';
     const restArgs = args.slice(1); // Get remaining args
 
-    if (new Error().stack?.includes('logWarning')) {
-      originalWarn(...args); // Call the original console.warn
+    if (
+      new Error().stack?.includes('logDevWarning') ||
+      new Error().stack?.includes('logWarning') ||
+      new Error().stack?.includes('log')
+    ) {
+      originalWarn?.(...args); // Call the original console.warn
     } else {
       handleMessage({
         type: LOG_TYPE.WARNING,
@@ -110,8 +133,12 @@ const interceptConsoleLogs = (): void => {
       typeof args[0] === 'string' ? args[0] : 'Intercepted error message';
     const restArgs = args.slice(1); // Get remaining args
 
-    if (new Error().stack?.includes('logError')) {
-      originalError(...args); // Call the original console.error
+    if (
+      new Error().stack?.includes('logDevError') ||
+      new Error().stack?.includes('logError') ||
+      new Error().stack?.includes('log')
+    ) {
+      originalError?.(...args); // Call the original console.error
     } else {
       handleMessage({
         type: LOG_TYPE.ERROR,
@@ -156,4 +183,10 @@ const initializeLoggingMiddleware = (): void => {
   }
 };
 
-export { interceptConsoleLogs, initializeLoggingMiddleware, getOriginalLog };
+export {
+  interceptConsoleLogs,
+  initializeLoggingMiddleware,
+  getOriginalLog,
+  getOriginalWarn,
+  getOriginalError,
+};
