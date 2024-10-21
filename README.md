@@ -18,7 +18,7 @@ We have moved description property to message, so it could be more logical align
 
 - **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
 - **Improved console UI**: Massivelly improves the readability of your logs with a much cleanner, space UI.
-- **Enhanced Grouping!**: Enhanced grouping with multiple groups amd multiple levels, choose the behaviour that works best for you!
+- **Enhanced Grouping!**: Enhanced grouping with multiple groups amd multiple levels, enabling concurrent groups, choose the behaviour that works best for you!
     Enhanced grouping of three types:
   - at start: only show group messages, holding other messages until the grouping ends
   - at end: show group messages only when the group ends and showGroup is triggered
@@ -412,13 +412,25 @@ logDevInfo({
 
 We are constantly improving our package, so these are a few things that what you could expect for the next releases:
 
-☐ Setup configuration
-  ☐ complete configurations
-  ☐ Theming 🎨
-
-☐ Fixes and know issues
+☐ Fix know issues
   ☐ default console log tracing
   ☐ file openning
+
+☐ Setup configuration
+  ☐ complete configurations
+    ☐ toggle multilne
+    ☐ toggle properties descriptions
+    ☐ switch group behavior
+      ☐ tradional
+      ☐ show on start
+      ☐ show on end(requested)
+    ☐ switch group display
+      ☐ default
+      ☐ rounded centered
+      ☐ squared anchored right
+  ☐ Theming 🎨
+    ☐ at least 4 options of themes
+
 
 ☐ enhanced grouping
   ☐ Visual UI
