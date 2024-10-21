@@ -9,7 +9,7 @@
 **!important!**
 ### Breaking Changes 
 
-We have moved description property to message, so it could be more logical aligned to console information purposes:
+We have moved description property to message, so it could be more logically aligned to console information purposes:
 - log.**description** parameter has changed to log.**message**
 - 
 ---
