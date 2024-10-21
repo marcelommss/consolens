@@ -42,6 +42,7 @@ https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
   - [Usage](#usage)
     - [Basic Setup](#basic-setup)
     - [How to log with Consolens](#how-to-log-with-consolens)
+      - [\*Dynamic information detection](#dynamic-information-detection)
   - [Logging Functions](#logging-functions)
       - [log](#log)
       - [logInfo, logWarning, logError](#loginfo-logwarning-logerror)
@@ -121,12 +122,6 @@ To intercept default console entries, you must call setupLogging on your system 
 
 All logging functions have the following optional parameters that help format the console entry UI:
 
-- **`source?`**: The source file or component emitting the log (e.g., `'App.tsx'`). This helps identify where the log was generated.
-
-- **`functionName?`**: The name of the function that generated the log (e.g., `'fetchData'`). Useful for tracing the log back to a specific function.
-
-- **`isEffect?`**: A boolean indicating whether this log is related to a side effect. Helps categorize logs that are tied to asynchronous actions or state changes.
-
 - **`description?`**: A string providing a description of the log message, explaining its purpose or context.
 
 - **`args?`**: Additional arguments or data to log, such as responses, objects, or any other relevant information. Can accept any type or an array of any types.
@@ -145,6 +140,29 @@ All logging functions have the following optional parameters that help format th
 
 - **`groupColor?`**: A boolean indicating whether this group should receive a background color with transparency. Each group will have a unique color, defined dynamically by Colorlens. The default is `false`.
 
+- * **`source?`**: The source file or component emitting the log (e.g., `'App.tsx'`). This helps identify where the log was generated.
+
+- * **`functionName?`**: The name of the function that generated the log (e.g., `'fetchData'`). Useful for tracing the log back to a specific function.
+
+- * **`isEffect?`**: A boolean indicating whether this log is related to a side effect. Helps categorize logs that are tied to asynchronous actions or state changes.
+
+#### *Dynamic information detection
+
+We have created a functionallity, that detects automatically the:
+ source(file), line and function that is calling the log
+  and others framework-specific functions
+ But if the code is minified and without any sourceMap, these key-names can not be identied.
+  So, if you still want to see the correct source(filename) and functionName, you can use the following properties for that. Like this example:
+
+```typescript
+// this will always show the filename and functionName, despite minification
+log({
+  source: 'App.tsx',
+  functionName: 'startApp',
+)}
+
+```
+
 ---
 
 ## Logging Functions
@@ -158,7 +176,6 @@ import { log } from 'consolens';
 // Simple information log
 log({
   type: LOG_TYPE.INFORMATION
-  source: 'ComponentName',
   description: 'paginationData has changed',
   args: [paginationData]
 });
@@ -180,8 +197,6 @@ import { logInfo, logWarning, logError } from 'consolens';
 
 // this will create a consolens log
 logInfo({
-  source: 'App.tsx',
-  functionName: 'initializeApp',
   isEffect: true,
   description: 'Application initialized successfully!',
   tags: [loading, error],
@@ -196,24 +211,18 @@ import { logDevInfo, logDevWarning, logDevError } from 'consolens';
 
 // Information log: Logs informational messages with optional metadata such as source, function name, description, and more.
 logDevInfo({
-  source: 'App.tsx',
-  functionName: 'initializeApp',
   description: 'Application initialized successfully!',
   tags: ['init', 'app'],
 });
 
 // Warning log: Logs warnings with metadata such as source, function name, description, and more.
 logDevWarning({
-  source: 'App.tsx',
-  functionName: 'fetchData',
   description: 'Data fetch returned incomplete results.',
   tags: ['fetch', dataObject],
 });
 
 // Error log: Logs errors with metadata, providing detailed information and arguments.
 logDevError({
-  source: 'App.tsx',
-  functionName: 'processData',
   description: 'Error processing data.',
   args: [error],
   tags: ['error', 'processing'],
@@ -237,8 +246,6 @@ You can create only one context, that is always a yellow chip.
 
 ```typescript
 logInfo({
-  source: 'LoginPage.tsx',
-  functionName: 'authenticateUser',
   description: 'User authentication failed.',
   context: 'auth',
 });
@@ -256,10 +263,9 @@ Tags in **Consolens** allow you to categorize and highlight specific log entries
 - Tags are stored and re-used between logs to maintain color consistency across sessions.
 
 ### Example:
+
 ```typescript
 logDevInfo({
-  source: 'Component.tsx',
-  functionName: 'getData',
   description: 'Data successfully fetched from API.',
   tags: ['api', 'fetch', 'data'],
 });
@@ -382,8 +388,6 @@ logHeader({
 
 // Log some information
 logDevInfo({
-  source: 'App.tsx',
-  functionName: 'startApp',
   description: 'Application has started successfully.',
   tags: ['start', 'app'],
 });

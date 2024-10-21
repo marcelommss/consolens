@@ -1,4 +1,4 @@
-import Icons from '../data/icons.data';
+import { Icons } from '../data/icons.data';
 
 /**
  * Enum representing console UI theme options

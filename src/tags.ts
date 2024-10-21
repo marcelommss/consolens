@@ -45,7 +45,8 @@ const loadTagColors = () => {
       ...config,
       loadedTags: true,
     });
-  } catch (error) {}
+    // eslint-disable-next-line no-empty
+  } catch {}
 };
 
 /**
