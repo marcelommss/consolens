@@ -1,7 +1,4 @@
-import {
-  interceptConsoleLogs,
-  initializeLoggingMiddleware,
-} from './middleware';
+import { interceptConsoleLogs } from './middleware';
 import { logDevInfo, logWarning, logError } from './logging';
 
 jest.mock('./logging', () => ({

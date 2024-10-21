@@ -1,4 +1,4 @@
-import Icons from './data/icons.data';
+import { Icons, Symbols } from './data/icons.data';
 import { handleMessage } from './helpers/logger.helper';
 import { logCallout } from './logging';
 import { LOG_HEADER_TYPE, LOG_TYPE } from './types/index';
@@ -126,7 +126,7 @@ const interceptConsoleLogs = (): void => {
 
   logCallout({
     title: 'Welcome to Consolens',
-    icon: Icons.Search,
+    icon: Symbols[Icons.Search],
     type: LOG_HEADER_TYPE.H5,
   });
 };

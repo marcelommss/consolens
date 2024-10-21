@@ -5,7 +5,7 @@ import {
   LogMessage,
   LogParams,
 } from '../types/index';
-import { findSymbol, KEYWORD_TYPES } from '../icons';
+import { findSymbol, KEYWORD_TYPES } from '../helpers/icons.helper';
 import { getTagColor } from '../tags';
 import { getLoggingConfiguration, initializeTags } from '../configurations';
 import { findDataFromTrace, getCallingFile } from './files.helper';

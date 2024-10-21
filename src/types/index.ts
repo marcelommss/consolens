@@ -1,5 +1,3 @@
-import { Icons } from '../data/icons.data';
-
 /**
  * Enum representing console UI theme options
  */
@@ -78,21 +76,6 @@ export enum GROUP_BEHAVIOUR {
  */
 export interface LogParams {
   /**
-   * The source file or component emitting the log (e.g., 'App.tsx').
-   */
-  source?: string;
-
-  /**
-   * The name of the function that generated the log (e.g., 'fetchData').
-   */
-  functionName?: string;
-
-  /**
-   * Indicates whether this log is related to a side effect.
-   */
-  isEffect?: boolean;
-
-  /**
    * A description of the log message, explaining what it represents.
    */
   description?: string;
@@ -140,6 +123,21 @@ export interface LogParams {
    * false by default.
    */
   groupColor?: boolean;
+
+  /**
+   * The source file or component emitting the log (e.g., 'App.tsx').
+   */
+  source?: string;
+
+  /**
+   * The name of the function that generated the log (e.g., 'fetchData').
+   */
+  functionName?: string;
+
+  /**
+   * Indicates whether this log is related to a side effect.
+   */
+  isEffect?: boolean;
 }
 
 /**
@@ -321,7 +319,7 @@ export interface LogCalloutParameters extends LogHeaderParameters {
   /**
    * An icon representing the callout
    */
-  icon?: Icons;
+  icon?: string;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { findSymbol, KEYWORD_TYPES } from './icons';
+import { findSymbol, KEYWORD_TYPES } from './icons.helper';
 
 describe('findSymbol - Load and Location Icons', () => {
   it('should return the correct symbol for load-related keywords', () => {
