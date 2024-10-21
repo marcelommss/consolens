@@ -41,27 +41,14 @@ const captureStackTrace = (): string[] => {
 };
 
 /**
- * Extracts trace information such as function name, file name, and line number from the current stack trace.
- * This function captures the stack trace and parses the relevant entry to gather information about the
- * function and source file where the trace was triggered.
+ * Extracts trace information such as function name, file name, and line number from the current stack entry.
+ * @param {string} stackEntry - Current stack entry.
  *
  * @returns {TraceInformation} An object containing functionName, fileName, and lineNumber.
  *                             If the stack trace is too short or cannot be parsed, the values will be undefined.
  */
-export const findDataFromTrace = (): TraceInformation => {
+export const findDataFromEntry = (stackEntry: string): TraceInformation => {
   const traceData: TraceInformation = {};
-  const entries = captureStackTrace();
-  if (entries.length === 0) return traceData;
-  let sourceIndex = 0;
-  entries.forEach((entry, index) => {
-    if (
-      entry.includes('at handleLog') &&
-      entry.includes('logging/helpers/logger.helper.ts')
-    )
-      sourceIndex = index + 2;
-  });
-
-  const stackEntry = entries[sourceIndex];
 
   // Extract the function name
   const matchFunction = stackEntry.match(/at\s+([^\s(]+)/);
@@ -93,6 +80,33 @@ export const findDataFromTrace = (): TraceInformation => {
   traceData.lineNumber = match ? +match[1] : undefined;
 
   return traceData;
+};
+
+/**
+ * Extracts trace information such as function name, file name, and line number from the current stack trace.
+ * This function captures the stack trace and parses the relevant entry to gather information about the
+ * function and source file where the trace was triggered.
+ *
+ * @returns {TraceInformation} An object containing functionName, fileName, and lineNumber.
+ *                             If the stack trace is too short or cannot be parsed, the values will be undefined.
+ */
+export const findDataFromTrace = (): TraceInformation => {
+  const entries = captureStackTrace();
+  if (entries.length === 0) return {};
+  let sourceIndex = 0;
+  entries.forEach((entry, index) => {
+    if (
+      entry.includes('at handleLog') &&
+      entry.includes('logging/helpers/logger.helper.ts')
+    ) {
+      sourceIndex = index + 2;
+      return;
+    }
+  });
+
+  const stackEntry = entries[sourceIndex];
+
+  return findDataFromEntry(stackEntry);
 };
 
 /**

@@ -1,7 +1,13 @@
 import { Icons, Symbols } from './data/icons.data';
+import { findDataFromEntry } from './helpers/files.helper';
 import { handleMessage } from './helpers/logger.helper';
 import { logCallout } from './logging';
-import { LOG_HEADER_TYPE, LOG_TYPE } from './types/index';
+import {
+  ConsoleMessage,
+  LOG_HEADER_TYPE,
+  LOG_TYPE,
+  LogMessage,
+} from './types/index';
 
 // Variable to store the original console.log
 let originalLog: typeof console.log | null = null;
@@ -48,23 +54,152 @@ const getOriginalError = (): typeof console.error => {
 
 /**
  * Extracts the source file and line number from the stack trace.
+ * @param {LOG_TYPE[]} type - Type of log.
+ * @param {string[]} entries - Stack trace entries.
  *
  * @returns {string} The file and line information where the log was called.
  */
-const getSourceFromStack = (): string => {
-  const error = new Error();
-  const stackLines = error.stack?.split('\n') || [];
-  const relevantLine = stackLines.find((line) => line.includes('at'));
+const getSourceFromStack = (
+  type: LOG_TYPE,
+  entries: string[]
+): string | undefined => {
+  let entryName = '';
+  switch (type) {
+    case LOG_TYPE.INFORMATION:
+      entryName = 'at console.log';
+      break;
+    case LOG_TYPE.WARNING:
+      entryName = 'at console.warn';
+      break;
+    case LOG_TYPE.ERROR:
+      entryName = 'at console.error';
+      break;
+    default:
+      entryName = 'at console.log';
+      break;
+  }
 
-  if (relevantLine) {
-    const match =
-      relevantLine.match(/at\s+(.*)\s+\((.*):(\d+):(\d+)\)/) ||
-      relevantLine.match(/at\s+(.*):(\d+):(\d+)/);
-    if (match) {
-      return `${match[2]}:${match[3]}`; // Returns file path and line number
+  for (let index = 0; index < entries.length; index++) {
+    const entry = entries[index];
+    if (entry.includes(entryName) && entry.includes('logging/middleware.ts')) {
+      const sourceIndex = index + 1;
+      return entries?.[sourceIndex];
     }
   }
-  return 'Unknown Source';
+
+  return undefined;
+};
+
+/**
+ * Get all the entries from the stack trace.
+ *
+ * @returns {string[]} return stack trace entries.
+ */
+const getStackTrace = (): string[] => {
+  try {
+    const error = new Error();
+    const stackLines = error.stack?.split('\n') || [];
+    return stackLines;
+  } catch {
+    return [];
+  }
+};
+
+/**
+ * Identifies and returns the message and the rest of the arguments based on the provided args array.
+ *
+ * @param args - An array of arguments that may include a message as the first element (string) and other arguments.
+ * @returns {ConsoleMessage} - An object containing the identified message and the remaining arguments.
+ *
+ * - `message`: A string representing the first argument if it is a string, otherwise a default message.
+ * - `restArgs`: The remaining arguments (if any), or undefined if no other arguments are provided.
+ */
+function identifyMessageAndArgs(args: any[]): ConsoleMessage {
+  const INTERCEPT_MESSAGE = 'Intercepted log message';
+  let message = INTERCEPT_MESSAGE;
+  let restArgs: any[] | undefined = args;
+
+  if (args && args.length > 0) {
+    message = typeof args[0] === 'string' ? args[0] : INTERCEPT_MESSAGE;
+    restArgs = message === INTERCEPT_MESSAGE ? args : args.slice(1) || [];
+  }
+
+  return { message, restArgs };
+}
+
+/**
+ * Determines whether the log should be intercepted based on the log type and stack trace entries.
+ *
+ * @param logType - The type of log being checked (e.g., INFO, ERROR, WARNING).
+ * @param entries - The array of stack trace entries to check.
+ * @returns {boolean} - Returns true if the log should be intercepted, false otherwise.
+ */
+function shouldInterceptLog(logType: LOG_TYPE, entries: string[]): boolean {
+  // Define log functions to intercept based on log type
+  const logFunctionsToCheck: string[] = {
+    [LOG_TYPE.INFORMATION]: ['at logDevInfo', 'at logInfo', 'at log'],
+    [LOG_TYPE.WARNING]: ['at logDevWarning', 'at logWarning', 'at log'],
+    [LOG_TYPE.ERROR]: ['at logDevError', 'at logError', 'at log'],
+  }[logType];
+
+  // Check if any stack trace entry matches the log functions and is from logger.helper.ts
+  return entries.some((entry) => {
+    const isLogFunctionMatch = logFunctionsToCheck.some((fn) =>
+      entry.includes(fn)
+    );
+    return isLogFunctionMatch && entry.includes('logger.helper.ts');
+  });
+}
+
+const handleConsoleMessage = (type: LOG_TYPE, args: any[]) => {
+  const entries = getStackTrace();
+
+  if (shouldInterceptLog(type, entries)) return;
+
+  const { message, restArgs } = identifyMessageAndArgs(args);
+
+  let logname = 'console.log';
+  switch (type) {
+    case LOG_TYPE.INFORMATION:
+      logname = 'console.log';
+      break;
+    case LOG_TYPE.WARNING:
+      logname = 'console.warn';
+      break;
+    case LOG_TYPE.ERROR:
+      logname = 'console.error';
+      break;
+
+    default:
+      break;
+  }
+  const logMessage: LogMessage = {
+    type,
+    functionName: logname,
+    message,
+    args: restArgs,
+    isFromDefaultConsole: true,
+  };
+
+  const source = getSourceFromStack(type, entries);
+  if (source) {
+    const traceInfo = findDataFromEntry(source);
+    if (traceInfo) {
+      if (traceInfo.fileName)
+        logMessage.source = traceInfo.fileName?.includes('Unknown Source')
+          ? undefined
+          : traceInfo.fileName;
+      if (traceInfo.lineNumber) logMessage.line = traceInfo.lineNumber;
+      if (traceInfo.functionName)
+        logMessage.functionName = traceInfo.functionName?.includes(
+          '<anonymous>'
+        )
+          ? undefined
+          : traceInfo.functionName;
+    }
+  }
+
+  handleMessage(logMessage);
 };
 
 /**
@@ -74,82 +209,22 @@ const getSourceFromStack = (): string => {
  */
 const interceptConsoleLogs = (): void => {
   // Backup the original console functions
-  createOriginalLog(); // Ensure originalLog is created
+  createOriginalLog();
+  // const interceptedLog = console.log;
+  // const interceptedWarn = console.warn;
+  // const interceptedError = console.error;
 
   // Wraps console.log to avoid recursion and extract more information
-  console.log = (...args: any[]) => {
-    const source = getSourceFromStack();
-    const message =
-      typeof args[0] === 'string' ? args[0] : 'Intercepted log message';
-    const restArgs = args.slice(1); // Get remaining args
-
-    if (
-      new Error().stack?.includes('logDevInfo') ||
-      new Error().stack?.includes('logInfo') ||
-      new Error().stack?.includes('log')
-    ) {
-      originalLog?.(...args); // Call the original console.log
-    } else {
-      handleMessage({
-        type: LOG_TYPE.INFORMATION,
-        source,
-        functionName: 'console.log',
-        message,
-        args: restArgs,
-        isFromDefaultConsole: true,
-      });
-    }
-  };
+  console.log = (...args: any[]) =>
+    handleConsoleMessage(LOG_TYPE.INFORMATION, args);
 
   // Wraps console.warn to avoid recursion and extract more information
-  console.warn = (...args: any[]) => {
-    const source = getSourceFromStack();
-    const message =
-      typeof args[0] === 'string' ? args[0] : 'Intercepted warning message';
-    const restArgs = args.slice(1); // Get remaining args
-
-    if (
-      new Error().stack?.includes('logDevWarning') ||
-      new Error().stack?.includes('logWarning') ||
-      new Error().stack?.includes('log')
-    ) {
-      originalWarn?.(...args); // Call the original console.warn
-    } else {
-      handleMessage({
-        type: LOG_TYPE.WARNING,
-        source,
-        functionName: 'console.warn',
-        message,
-        args: restArgs,
-        isFromDefaultConsole: true,
-      });
-    }
-  };
+  console.warn = (...args: any[]) =>
+    handleConsoleMessage(LOG_TYPE.WARNING, args);
 
   // Wraps console.error to avoid recursion and extract more information
-  console.error = (...args: any[]) => {
-    const source = getSourceFromStack();
-    const message =
-      typeof args[0] === 'string' ? args[0] : 'Intercepted error message';
-    const restArgs = args.slice(1); // Get remaining args
-
-    if (
-      new Error().stack?.includes('logDevError') ||
-      new Error().stack?.includes('logError') ||
-      new Error().stack?.includes('log')
-    ) {
-      originalError?.(...args); // Call the original console.error
-    } else {
-      handleMessage({
-        type: LOG_TYPE.ERROR,
-        source,
-        functionName: 'console.error',
-        message,
-        args: restArgs,
-        isFromDefaultConsole: true,
-      });
-    }
-  };
+  console.error = (...args: any[]) =>
+    handleConsoleMessage(LOG_TYPE.ERROR, args);
 
   logCallout({
     title: 'Welcome to Consolens',

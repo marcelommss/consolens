@@ -176,3 +176,14 @@ export interface TraceInformation {
    */
   lineNumber?: number;
 }
+
+/**
+ * Represents the structure of the return value for the identifyMessageAndArgs function.
+ *
+ * @property message - A string that represents either the first argument (if it's a string) or a default message.
+ * @property restArgs - The remaining arguments after the message. This is an array of any values or undefined if no other arguments are provided.
+ */
+export type ConsoleMessage = {
+  message: string;
+  restArgs: any[] | undefined;
+};
