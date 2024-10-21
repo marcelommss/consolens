@@ -5,11 +5,18 @@ import {
   LogMessage,
   LogParams,
 } from '../types/index';
-import { findSymbol, KEYWORD_TYPES } from '../helpers/icons.helper';
-import { getTagColor } from '../tags';
-import { getLoggingConfiguration, initializeTags } from '../configurations';
+import { getTagColor } from '../services/tags';
+import {
+  getLoggingConfiguration,
+  initializeTags,
+} from '../services/configurations';
+import {
+  addMessage,
+  getAllMessages,
+  getGroupMessages,
+} from '../services/groups';
+import { findSymbol, KEYWORD_TYPES } from './icons.helper';
 import { findDataFromTrace, getCallingFile } from './files.helper';
-import { addMessage, getAllMessages, getGroupMessages } from '../groups';
 
 /**
  * Creates a formatted message string for the log based on the parameters and adds a symbol if needed.

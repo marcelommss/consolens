@@ -2,7 +2,7 @@ import {
   getLoggingConfiguration,
   initializeLogging,
   initializeTags,
-} from './configurations';
+} from './services/configurations';
 import isDev from './helpers/environment.helper';
 import {
   handleAllGroups,

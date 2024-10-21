@@ -1,4 +1,4 @@
-import { LogGroup, LogMessage } from './types/index';
+import { LogGroup, LogMessage } from '../types/index';
 
 // Internal groups object
 let logGroups: LogGroup[] = [];

@@ -4,7 +4,7 @@ import {
   initializeLogging,
   initializeTags,
 } from './configurations';
-import { CLOCK_TYPE, LoggingConfiguration, LoggingSetup } from './types';
+import { CLOCK_TYPE, LoggingConfiguration, LoggingSetup } from '../types';
 import { loadTagColors } from './tags'; // Mock this function
 
 jest.mock('./tags', () => ({

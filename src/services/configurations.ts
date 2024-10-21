@@ -5,7 +5,7 @@ import {
   LOG_HEADER_TYPE,
   LoggingConfiguration,
   LoggingSetup,
-} from './types/index';
+} from '../types/index';
 
 // Internal master configuration object
 const masterLoggingConfig: LoggingConfiguration = {
