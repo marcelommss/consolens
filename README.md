@@ -11,7 +11,7 @@
 
 We have moved description property to message, so it could be more logical aligned to console information purposes:
 - log.**description** parameter has changed to log.**message**
-
+- 
 ---
 
 ## Features
@@ -151,19 +151,21 @@ All logging functions have the following optional parameters that help format th
 
 - **`groupColor?`**: A boolean indicating whether this group should receive a background color with transparency. Each group will have a unique color, defined dynamically by Colorlens. The default is `false`.
 
-- * **`source?`**: The source file or component emitting the log (e.g., `'App.tsx'`). This helps identify where the log was generated.
+- * **`source?`**: (automatic information) The source file or component emitting the log (e.g., `'App.tsx'`). This helps identify where the log was generated.
 
-- * **`functionName?`**: The name of the function that generated the log (e.g., `'fetchData'`). Useful for tracing the log back to a specific function.
+- * **`functionName?`**: (automatic information) The name of the function that generated the log (e.g., `'fetchData'`). Useful for tracing the log back to a specific function.
 
-- * **`isEffect?`**: A boolean indicating whether this log is related to a side effect. Helps categorize logs that are tied to asynchronous actions or state changes.
+- * **`isEffect?`**:(automatic information) A boolean indicating whether this log is related to a side effect. Helps categorize logs that are tied to asynchronous actions or state changes. 
 
 #### *Dynamic information detection
 
-We have created a functionallity, that detects automatically the:
- source(file), line and function that is calling the log
-  and others framework-specific functions
- But if the code is minified and without any sourceMap, these key-names can not be identied.
-  So, if you still want to see the correct source(filename) and functionName, you can use the following properties for that. Like this example:
+(automatic information)
+ We have created a functionallity that detects automatically the multiple informations,
+ But if the code is minified and without any sourceMap,
+  these informations that are mapped from key-names can not be identied.
+ So, if you still want to see the correct source(filename) and functionName,
+  you can use the following properties for that. 
+  Like this example:
 
 ```typescript
 // this will always show the filename and functionName, despite minification
