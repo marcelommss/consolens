@@ -3,7 +3,6 @@ import {
   GROUP_BEHAVIOUR,
   LOG_TYPE,
   LogMessage,
-  LogParams,
 } from '../types/index';
 import { getTagColor } from '../services/tags';
 import {
@@ -17,9 +16,11 @@ import {
 } from '../services/groups';
 import { findSymbol, KEYWORD_TYPES } from './icons.helper';
 import { findDataFromTrace, getCallingFile } from './files.helper';
+import { getOriginalWarn, getOriginalError } from '../middleware';
 
 /**
  * Creates a formatted message string for the log based on the parameters and adds a symbol if needed.
+ * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
  * @param {string} source - The source file or component emitting the log
  * @param {string} functionName - The name of the function that generated the log
  * @param {boolean} isEffect - Whether this log is related to a side effect
@@ -30,10 +31,13 @@ import { findDataFromTrace, getCallingFile } from './files.helper';
  * @param {string} [context] - The context of this message
  * @param {string[]} [tags] - Tags for this message
  * @param {boolean} [hasArgs] - Check if has args
+ * @param {boolean} [isError] - Check if is error
+ * @param {boolean} [hasVerticalSpace] - Check if has vertical space before log
  * @param {CLOCK_TYPE} [datetimeDisplayType] - Display type for datetime
  * @returns {string} - The formatted log message
  */
 const createMessage = ({
+  type,
   source,
   functionName,
   isEffect,
@@ -44,8 +48,11 @@ const createMessage = ({
   context,
   tags,
   hasArgs,
+  isError,
+  hasVerticalSpace,
   datetimeDisplayType = CLOCK_TYPE.DATETIME,
 }: {
+  type?: LOG_TYPE;
   source?: string;
   functionName?: string;
   isEffect?: boolean;
@@ -56,6 +63,8 @@ const createMessage = ({
   context?: string;
   tags?: string[];
   hasArgs?: boolean;
+  isError?: boolean;
+  hasVerticalSpace?: boolean;
   datetimeDisplayType?: CLOCK_TYPE;
 }) => {
   if (symbol === '') symbol = '🕒';
@@ -75,13 +84,15 @@ const createMessage = ({
       break;
   }
 
-  let data = `%c${displayDT} ${symbol}%c`;
-
+  let data = '';
+  // if (hasVerticalSpace) data += `%c  `;
+  data = `%c${displayDT} ${symbol}%c`;
   if (context) data += `%c« ${context} »`;
 
-  if (source) data += `%c /${source}`;
-
-  if (line !== undefined) data += `:%c${line}`;
+  if (source) {
+    data += `%c /${source}`;
+    if (line !== undefined) data += `:%c${line}`;
+  }
 
   // if (symbol) data += `%c${symbol}`;
 
@@ -107,7 +118,12 @@ const createMessage = ({
     }\t%cmessage:  ${hasMessageColor ? '%c%c' : '%c'}${message}`;
   }
 
-  if (hasArgs) data += `%c\n\t\t   args:%c  `;
+  if (hasArgs) {
+    let customIdentifier = 'args:';
+    if (isError) customIdentifier = '▼';
+    if (type === LOG_TYPE.WARNING) customIdentifier = '▼ args:';
+    data += `%c\n\t\t   ${customIdentifier}%c  `;
+  }
 
   return data;
 };
@@ -116,6 +132,7 @@ const createMessage = ({
  * Creates the styles array based on the log type and parameters.
  * Handles styling for the message, symbols, and other log properties.
  *
+ * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
  * @param {string} baseColor - The base color for the log type (e.g., red for errors, orange for warnings)
  * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
  * @param {string} [source] - The source file/component emitting the log
@@ -128,9 +145,11 @@ const createMessage = ({
  * @param {string} [context] - The context of this message
  * @param {string[]} [tags] - Tags for this message
  * @param {boolean} [hasArgs] - Check if has args
+ * @param {boolean} [hasVerticalSpace] - Check if has vertical space before log
  * @returns {string[]} - The array of CSS styles to apply to the log message
  */
 const createStyles = ({
+  type,
   baseColor,
   source,
   functionName,
@@ -141,9 +160,10 @@ const createStyles = ({
   context,
   tags,
   hasArgs,
+  hasVerticalSpace,
 }: {
-  baseColor: string;
   type?: LOG_TYPE;
+  baseColor: string;
   source?: string;
   functionName?: string;
   isEffect?: boolean;
@@ -154,23 +174,27 @@ const createStyles = ({
   context?: string;
   tags?: string[];
   hasArgs?: boolean;
+  hasVerticalSpace?: boolean;
 }) => {
-  const styles: string[] = [
-    `color: ${baseColor}; font-weight: bold; font-size: 12px; line-height: 2.2; background-color: #ffffff12; border-radius: 16px; padding: 0px 10px; margin-top:2px`,
-    'border:none;',
-  ];
+  const styles: string[] = [];
+  // if (hasVerticalSpace) styles.push('padding-top: 21px;');
 
+  styles.push(
+    `color: ${baseColor}; font-weight: bold; font-size: 12px; line-height: 2.2; background-color: #ffffff12; border-radius: 16px; padding: 0px 10px; margin-top:2px`,
+    'border:none;'
+  );
   if (context)
     styles.push(
       'font-weight: 800; font-size: 11.5px; color: #000000DD; background-color: #d8c752; border-radius: 16px; padding: 4px 10px; margin-left: 12px; margin-top: -2px margin-bottom: 12px;'
     );
 
-  if (source)
+  if (source) {
     styles.push(
       'font-weight: normal; color: #56e05e; padding: 0 0 0 10px; line-height: 2.4;'
     );
 
-  if (line !== undefined) styles.push('font-weight: 600; color: #dfecf9;');
+    if (line !== undefined) styles.push('font-weight: 600; color: #dfecf9;');
+  }
 
   // if (symbol)
   //   styles.push('font-weight: bold; color: #cfebfc;  padding: 0 15px;');
@@ -216,7 +240,7 @@ const createStyles = ({
 };
 
 /**
- * Prepares the log message, styles, and arguments for logging.
+ * Create the log.
  * This function centralizes the logic for assembling the log's formatted message, styles, and arguments.
  * It handles the calling file, symbols, tags, and optional arguments, and ensures consistency across all log types.
  *
@@ -236,49 +260,75 @@ const createStyles = ({
  *
  * console.info(data, ...styles, ...args);
  */
-const prepareLog = (params: LogParams, baseColor: string) => {
+const createLog = (logMessage: LogMessage, baseColor: string) => {
   initializeTags();
   const config = getLoggingConfiguration();
-
-  const callingFile: string | undefined =
-    getCallingFile(params.source) ?? 'Unknown Source';
 
   const symbol =
     findSymbol({
       type: KEYWORD_TYPES.ALL,
-      args: [params.functionName, callingFile, params.message],
+      args: [logMessage.functionName, logMessage.source, logMessage.message],
     }) || '🕒';
 
-  const hasArgs = params.args !== undefined && params.args?.length > 0;
+  const hasArgs = logMessage.args !== undefined && logMessage.args?.length > 0;
   const data = createMessage({
-    source: callingFile,
-    functionName: params.functionName,
-    isEffect: params.isEffect,
-    hasMessageColor: !!params.messageColor,
-    message: params.message,
-    line: params.line,
+    type: logMessage.type,
+    source: logMessage.source,
+    functionName: logMessage.functionName,
+    isEffect: logMessage.isEffect,
+    hasMessageColor: !!logMessage.messageColor,
+    message: logMessage.message,
+    line: logMessage.line,
     symbol,
-    context: params.context,
-    tags: params.tags,
+    context: logMessage.context,
+    tags: logMessage.tags,
     hasArgs,
+    isError: logMessage.isError,
     datetimeDisplayType: config.datetimeDisplayType,
   });
 
   const styles = createStyles({
+    type: logMessage.type,
     baseColor,
-    source: callingFile,
-    functionName: params.functionName,
-    isEffect: params.isEffect,
-    messageColor: params.messageColor,
-    line: params.line,
-    message: params.message,
-    context: params.context,
-    tags: params.tags,
+    source: logMessage.source,
+    functionName: logMessage.functionName,
+    isEffect: logMessage.isEffect,
+    messageColor: logMessage.messageColor,
+    line: logMessage.line,
+    message: logMessage.message,
+    context: logMessage.context,
+    tags: logMessage.tags,
     symbol,
     hasArgs,
+    hasVerticalSpace:
+      logMessage.type === LOG_TYPE.WARNING ||
+      logMessage.type === LOG_TYPE.ERROR,
   });
 
-  return { data, styles, args: params.args };
+  return { data, styles, args: logMessage.args };
+};
+
+/**
+ * Prepares the log messag by identifying the calling source
+ * @param {LogParams} params - The logging parameters including source, function name, message, tags, etc.
+ * @param {string} baseColor - The base color for the log style (used for different log types like INFO, WARNING, ERROR).
+ * @param {boolean} [datetimeDisplayType=DATETIME] - Flag to determine which date and time type should be included in the log. Defaults to datetime.
+ * @returns {{ data: string, styles: string[], args: any[] }} - Returns an object containing the formatted log message (`data`),
+ *          the CSS styles to be applied to the log (`styles`), and the additional log arguments (`args`).
+ *
+ * @example
+ * const { data, styles, args } = prepareLog({
+ *   source: 'App.tsx',
+ *   functionName: 'fetchData',
+ *   message: 'Fetching data from API...',
+ *   tags: ['api', 'fetch']
+ * }, 'lightgray');
+ *
+ * console.info(data, ...styles, ...args);
+ */
+const prepareLog = (params: LogMessage, baseColor: string) => {
+  params.source = getCallingFile(params.source) ?? undefined;
+  return createLog(params, baseColor);
 };
 
 /**
@@ -288,26 +338,28 @@ const prepareLog = (params: LogParams, baseColor: string) => {
  * @param {LogMessage} message - The log message object containing type, color, and other parameters.
  */
 export const handleMessage = (message: LogMessage) => {
-  const { data, styles, args } = prepareLog(
-    message,
-    message.color ?? 'lightgray'
-  );
-  // Ensure args is defined, or default to an empty array
-  const safeArgs = args ?? [];
+  const { data, styles, args } = message.isFromDefaultConsole
+    ? createLog(message, message.color ?? 'lightgray')
+    : prepareLog(message, message.color ?? 'lightgray');
 
   // Log according to the log type and include args
   switch (message.type) {
     case LOG_TYPE.INFORMATION:
-      console.info(data, ...styles, ...safeArgs);
+      if (args) console.info(data, ...styles, ...args);
+      else console.info(data, ...styles);
       break;
     case LOG_TYPE.WARNING:
-      console.warn(data, ...styles, ...safeArgs);
+      if (args) getOriginalWarn()?.(data, ...styles, ...args);
+      else getOriginalWarn()?.(data, ...styles);
       break;
     case LOG_TYPE.ERROR:
-      console.error(data, ...styles, ...safeArgs);
+      if (args) getOriginalError()?.(data, ...styles, ...args);
+      else getOriginalError()?.(data, ...styles);
       break;
     default:
-      console.info(data, ...styles, ...safeArgs); // Default to info
+      // Default to info
+      if (args) console.info(data, ...styles, ...args);
+      else console.info(data, ...styles);
   }
 };
 

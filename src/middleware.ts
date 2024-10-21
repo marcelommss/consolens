@@ -18,11 +18,13 @@ let originalError: typeof console.error | null = null;
  * Creates and stores the original console.log if it hasn't been created already.
  */
 const createOriginalLog = (): void => {
-  if (typeof console === 'undefined' || typeof console.log !== 'function')
-    return;
-  if (!originalLog) originalLog = console.log;
-  if (!originalWarn) originalWarn = console.warn;
-  if (!originalError) originalError = console.error;
+  if (typeof console === 'undefined') return;
+  if (typeof console.log === 'function' && !originalLog)
+    originalLog = console.log;
+  if (typeof console.warn === 'function' && !originalWarn)
+    originalWarn = console.warn;
+  if (typeof console.error === 'function' && !originalError)
+    originalError = console.error;
 };
 
 /**
@@ -114,17 +116,30 @@ const getStackTrace = (): string[] => {
  * - `message`: A string representing the first argument if it is a string, otherwise a default message.
  * - `restArgs`: The remaining arguments (if any), or undefined if no other arguments are provided.
  */
-function identifyMessageAndArgs(args: any[]): ConsoleMessage {
+function identifyMessageAndArgs(type: LOG_TYPE, args: any[]): ConsoleMessage {
   const INTERCEPT_MESSAGE = 'Intercepted log message';
-  let message = INTERCEPT_MESSAGE;
+  let message: string | undefined = INTERCEPT_MESSAGE;
   let restArgs: any[] | undefined = args;
+  let isError: boolean = false;
 
   if (args && args.length > 0) {
-    message = typeof args[0] === 'string' ? args[0] : INTERCEPT_MESSAGE;
-    restArgs = message === INTERCEPT_MESSAGE ? args : args.slice(1) || [];
+    if (args[0] instanceof Error) {
+      message = undefined;
+      restArgs = args;
+      isError = true;
+    } else {
+      message = typeof args[0] === 'string' ? args[0] : INTERCEPT_MESSAGE;
+      restArgs = message === INTERCEPT_MESSAGE ? args : args.slice(1) || [];
+      if (
+        type === LOG_TYPE.ERROR &&
+        args.length > 1 &&
+        args[1] instanceof Error
+      )
+        isError = true;
+    }
   }
 
-  return { message, restArgs };
+  return { message, restArgs, isError };
 }
 
 /**
@@ -137,11 +152,25 @@ function identifyMessageAndArgs(args: any[]): ConsoleMessage {
 function shouldInterceptLog(logType: LOG_TYPE, entries: string[]): boolean {
   // Define log functions to intercept based on log type
   const logFunctionsToCheck: string[] = {
-    [LOG_TYPE.INFORMATION]: ['at logDevInfo', 'at logInfo', 'at log'],
-    [LOG_TYPE.WARNING]: ['at logDevWarning', 'at logWarning', 'at log'],
-    [LOG_TYPE.ERROR]: ['at logDevError', 'at logError', 'at log'],
+    [LOG_TYPE.INFORMATION]: [
+      'at logDevInfo',
+      'at logInfo',
+      'at log',
+      'handleMessage',
+    ],
+    [LOG_TYPE.WARNING]: [
+      'at logDevWarning',
+      'at logWarning',
+      'at log',
+      'handleMessage',
+    ],
+    [LOG_TYPE.ERROR]: [
+      'at logDevError',
+      'at logError',
+      'at log',
+      'handleMessage',
+    ],
   }[logType];
-
   // Check if any stack trace entry matches the log functions and is from logger.helper.ts
   return entries.some((entry) => {
     const isLogFunctionMatch = logFunctionsToCheck.some((fn) =>
@@ -153,10 +182,12 @@ function shouldInterceptLog(logType: LOG_TYPE, entries: string[]): boolean {
 
 const handleConsoleMessage = (type: LOG_TYPE, args: any[]) => {
   const entries = getStackTrace();
+  if (shouldInterceptLog(type, entries)) {
+    // originalLog?.apply(console, args);
+    return;
+  }
 
-  if (shouldInterceptLog(type, entries)) return;
-
-  const { message, restArgs } = identifyMessageAndArgs(args);
+  const { message, restArgs, isError } = identifyMessageAndArgs(type, args);
 
   let logname = 'console.log';
   switch (type) {
@@ -179,6 +210,7 @@ const handleConsoleMessage = (type: LOG_TYPE, args: any[]) => {
     message,
     args: restArgs,
     isFromDefaultConsole: true,
+    isError,
   };
 
   const source = getSourceFromStack(type, entries);

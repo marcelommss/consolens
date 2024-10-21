@@ -59,6 +59,7 @@ export enum Icons {
   Engine = 'Engine',
   Envelope = 'Envelope',
   Erase = 'Erase',
+  Error = 'Error',
   Face = 'Face',
   Failure = 'Failure',
   Favorite = 'Favorite',

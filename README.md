@@ -414,7 +414,7 @@ logDevInfo({
 We are constantly improving our package, so these are a few things that what you could expect for the next releases:
 
 ☐ Fix know issues
-  ☐ default console log tracing
+  ✅ default console log tracing
   ☐ file openning
 
 ☐ Setup configuration

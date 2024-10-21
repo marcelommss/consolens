@@ -98,6 +98,16 @@ export interface LogMessage extends LogParams {
    * This indicates the log message comes default console.log
    */
   isFromDefaultConsole?: boolean;
+
+  /**
+   * This indicates the log is an error with error argument
+   */
+  isError?: boolean;
+
+  /**
+   * This indicates the log is an warning with error argument
+   */
+  isWarning?: boolean;
 }
 
 /**
@@ -184,6 +194,7 @@ export interface TraceInformation {
  * @property restArgs - The remaining arguments after the message. This is an array of any values or undefined if no other arguments are provided.
  */
 export type ConsoleMessage = {
-  message: string;
-  restArgs: any[] | undefined;
+  message?: string;
+  restArgs?: any[] | undefined;
+  isError?: boolean;
 };
