@@ -102,7 +102,9 @@ yarn add consolens
 
 ### Basic Setup
 
+*not mandatory*
 First, you can configure the logging package:
+
 ```typescript
 import { setupLogging } from 'consolens';
 
@@ -129,6 +131,94 @@ or skip this step if you want the default configuration:
 ```
 
 To intercept default console entries, you must call setupLogging on your system start with interceptLogs: true.
+
+---
+
+## Logging Functions
+
+#### logInfo, logWarn, logError
+
+Type specific functions *recommended*
+
+```typescript
+import { logInfo, logWarn, logError } from 'consolens';
+
+// this will create a console log
+// same as logInformation
+logInfo({
+  message: 'Application initialized successfully!',
+});
+
+// this will create a console warn
+// same as logWarning
+logWarn({
+  message: 'Attention, this feature will be disabled soon!',
+});
+
+// this will create a console error passing the error as parameter
+logError({
+  message: 'There was an error while loading data',
+  args: [error],
+});
+
+```
+
+---
+
+#### log
+Create a log where you define the type: INFORMATION, ERROR or WARNING.
+
+```typescript
+import { log } from 'consolens';
+
+// Simple information log
+loglens({
+  type: LOG_TYPE.INFORMATION
+  message: 'paginationData has changed',
+  args: [paginationData]
+});
+
+// Warning on user authentication failure
+// loglens and log are the same and both recognized functions on consolens,
+// but we recommend the use of loglens for easier sepparation and identification
+loglens({
+  type: LOG_TYPE.WARNING
+  source: 'Login.tsx',
+  functionName: 'authentication',
+  message: 'Authenticate user failed',
+});
+```
+
+---
+
+#### Dev functions
+
+This functions will only log during development mode.
+
+```typescript
+import { logDevInfo, logDevWarn, logDevError } from 'consolens';
+
+// Information log: Logs informational messages with optional metadata such as source, function name, message, and more.
+logDevInfo({
+  message: 'Application initialized successfully!',
+  tags: ['init', 'app'],
+});
+
+// Warning log: Logs warnings with metadata such as source, function name, message, and more.
+logDevWarn({
+  message: 'Data fetch returned incomplete results.',
+  tags: ['fetch', dataObject],
+});
+
+// Error log: Logs errors with metadata, providing detailed information and arguments.
+logDevError({
+  message: 'Error processing data.',
+  args: [error],
+  tags: ['error', 'processing'],
+});
+```
+
+---
 
 ### How to log with Consolens
 
@@ -175,87 +265,6 @@ loglens({
   functionName: 'startApp',
 )}
 
-```
-
----
-
-## Logging Functions
-
-#### log
-Create a log where you define the type: INFORMATION, ERROR or WARNING.
-
-```typescript
-import { log } from 'consolens';
-
-// Simple information log
-loglens({
-  type: LOG_TYPE.INFORMATION
-  message: 'paginationData has changed',
-  args: [paginationData]
-});
-
-// Warning on user authentication failure
-// loglens and log are the same and both recognized functions on consolens,
-// but we recommend the use of loglens for easier sepparation and identification
-loglens({
-  type: LOG_TYPE.WARNING
-  source: 'Login.tsx',
-  functionName: 'authentication',
-  message: 'Authenticate user failed',
-});
-```
-
-#### logInfo, logWarn, logError
-Logs informational messages with optional metadata such as source, function name, message, and more.
-
-```typescript
-import { logInfo, logWarn, logError } from 'consolens';
-
-// this will create a console log
-// same as logInformation
-logInfo({
-  message: 'Application initialized successfully!',
-});
-
-// this will create a console warn
-// same as logWarning
-logWarn({
-  message: 'Attention, this feature will be disabled soon!',
-});
-
-// this will create a console error passing the error as parameter
-logError({
-  message: 'There was an error while loading data',
-  args: [error],
-});
-
-```
-
-#### Dev functions
-
-This functions will only log during development mode.
-
-```typescript
-import { logDevInfo, logDevWarn, logDevError } from 'consolens';
-
-// Information log: Logs informational messages with optional metadata such as source, function name, message, and more.
-logDevInfo({
-  message: 'Application initialized successfully!',
-  tags: ['init', 'app'],
-});
-
-// Warning log: Logs warnings with metadata such as source, function name, message, and more.
-logDevWarn({
-  message: 'Data fetch returned incomplete results.',
-  tags: ['fetch', dataObject],
-});
-
-// Error log: Logs errors with metadata, providing detailed information and arguments.
-logDevError({
-  message: 'Error processing data.',
-  args: [error],
-  tags: ['error', 'processing'],
-});
 ```
 
 ---

@@ -1,4 +1,4 @@
-import { TraceInformation } from '../types/index';
+import { ConsoleMessage, LOG_TYPE, TraceInformation } from '../types/index';
 
 /**
  * Retrieves the file name and line number of the calling function from the stack trace.
@@ -130,3 +130,41 @@ export const getCallingFile = (source?: string): string | undefined => {
 
   return callingFile;
 };
+
+/**
+ * Identifies and returns the message and the rest of the arguments based on the provided args array.
+ *
+ * @param args - An array of arguments that may include a message as the first element (string) and other arguments.
+ * @returns {ConsoleMessage} - An object containing the identified message and the remaining arguments.
+ *
+ * - `message`: A string representing the first argument if it is a string, otherwise a default message.
+ * - `restArgs`: The remaining arguments (if any), or undefined if no other arguments are provided.
+ */
+export function identifyMessageAndArgs(
+  args: any[],
+  type?: LOG_TYPE
+): ConsoleMessage {
+  const INTERCEPT_MESSAGE = 'Intercepted log message';
+  let message: string | undefined = INTERCEPT_MESSAGE;
+  let restArgs: any[] | undefined = args;
+  let isError: boolean = false;
+
+  if (args && args.length > 0) {
+    if (args[0] instanceof Error) {
+      message = undefined;
+      restArgs = args;
+      isError = true;
+    } else {
+      message = typeof args[0] === 'string' ? args[0] : INTERCEPT_MESSAGE;
+      restArgs = message === INTERCEPT_MESSAGE ? args : args.slice(1) || [];
+      if (
+        (!type || type === LOG_TYPE.ERROR) &&
+        args.length > 1 &&
+        args[1] instanceof Error
+      )
+        isError = true;
+    }
+  }
+
+  return { message, restArgs, isError };
+}

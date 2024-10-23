@@ -19,6 +19,7 @@ import {
   LogHeaderParameters,
   LogParams,
 } from './types/index';
+import { identifyMessageAndArgs } from './helpers/files.helper';
 
 /**
  * Sets up the logging package with the provided configuration.
@@ -103,25 +104,55 @@ const logError = (params: LogParams) => {
   });
 };
 
+const isConsoleLogParams = (input: any): input is ConsoleLogParams => {
+  return typeof input === 'object' && input !== null && 'type' in input;
+};
+
 /**
  * General logging function that handles different log types (INFO, WARNING, ERROR).
  *
  * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
  * @param {ConsoleLogParams} params - The logging parameters
  */
-const loglens = ({ type, ...params }: ConsoleLogParams) => {
-  switch (type) {
-    case LOG_TYPE.INFORMATION:
-      logInfo(params);
-      break;
-    case LOG_TYPE.WARNING:
-      logWarning(params);
-      break;
-    case LOG_TYPE.ERROR:
-      logError(params);
-      break;
-    default:
-      logInfo(params);
+const loglens = (input: ConsoleLogParams | string | any) => {
+  if (!input) return;
+  if (typeof input === 'string') {
+    logInfo({ message: input });
+  } else if (isConsoleLogParams(input)) {
+    const { type, ...params } = input;
+    switch (type) {
+      case LOG_TYPE.INFORMATION:
+        logInfo(params);
+        break;
+      case LOG_TYPE.WARNING:
+        logWarning(params);
+        break;
+      case LOG_TYPE.ERROR:
+        logError(params);
+        break;
+      default:
+        logInfo(params);
+    }
+  } else {
+    if (Array.isArray(input)) {
+      const { message, restArgs, isError } = identifyMessageAndArgs(input);
+
+      if (isError) {
+        if (message) {
+          logError({ message, args: restArgs });
+        } else {
+          logError({ args: input });
+        }
+      } else {
+        if (message) {
+          logInfo({ message, args: restArgs });
+        } else {
+          logInfo({ args: input });
+        }
+      }
+      return;
+    }
+    logInfo({ args: [input] });
   }
 };
 
