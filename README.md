@@ -6,14 +6,6 @@
 
 ---
 
-
-#### **Important‼️** - Breaking Changes 
-
-We have moved description property to message, so it could be more logically aligned to console information purposes:
-| log.**description** | parameter has changed to log.**message** |
-  
----
-
 ## Features
 
 - **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
@@ -45,7 +37,7 @@ https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
 ## Table of Contents
 
 - [Consolens](#consolens)
-      - [**Important‼️** - Breaking Changes](#important️---breaking-changes)
+      - [Breaking Changes](#breaking-changes)
   - [Features](#features)
     - [VS CODE INTEGRATION](#vs-code-integration)
   - [Table of Contents](#table-of-contents)
@@ -454,15 +446,21 @@ logDevInfo({
 
 ---
 
+**Important‼️** 
+### Breaking Changes 
+
+We have moved description property to message, so it could be more logically aligned to console information purposes:
+
+| log.**description** | parameter has changed to log.**message** |
+
+---
+
 ## UPCOMING FEATURES
 
 We are constantly improving our package, so these are a few things that what you could expect for the next releases:
 
 - ✅ Simples log(without typed parameters / any)
   - ✅ message and args recognition
-
-- ☐ Fix know issues
-  - ✅ default console log tracing
 
 - ☐ Setup configuration
   -  ☐ complete configurations
@@ -493,11 +491,14 @@ We are constantly improving our package, so these are a few things that what you
 
 - ☐ source file openning
 
-We are also working on other repos to create:
-- ☐ a guide website (work in-progress)
-- ☐ a codelens-examples repository
-- ☐ a Chrome extension
-  - ☐ consolens visual to all logs(for all sites) 
+We are also working on:
+- ☐ consolens website - tutorials, examples and documentation (work in-progress)
+- ☐ youtube guidance video
+- ☐ a codelens-examples repository on github
+- ☐ a Chrome extension -> consolens to all sites 
+
+- ☐ Fix know issues
+  - ✅ default console log tracing
 
 ---
 
