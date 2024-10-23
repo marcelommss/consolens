@@ -458,7 +458,7 @@ logDevInfo({
 
 We are constantly improving our package, so these are a few things that what you could expect for the next releases:
 
-- ☐ Simples log(without typed parameters / any)
+- ✅ Simples log(without typed parameters / any)
   - ✅ message and args recognition
 
 - ☐ Fix know issues
