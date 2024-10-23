@@ -75,10 +75,21 @@ export interface LogParams {
 }
 
 /**
+ * Interface for logging parameters.
+ * Type of the console function and LogParams.
+ */
+export interface ConsoleLogParams extends LogParams {
+  /**
+   * This indicates the type of the message
+   */
+  type: LOG_TYPE;
+}
+
+/**
  * Interface for log messages.
  * Provides structured data for logging messages.
  */
-export interface LogMessage extends LogParams {
+export interface LogMessage extends ConsoleLogParams {
   /**
    * This indicates the type of the message
    */

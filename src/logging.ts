@@ -11,6 +11,7 @@ import {
 } from './helpers/logger.helper';
 import { getOriginalLog, initializeLoggingMiddleware } from './middleware';
 import {
+  ConsoleLogParams,
   LOG_HEADER_TYPE,
   LOG_TYPE,
   LogCalloutParameters,
@@ -46,13 +47,15 @@ export function setupLogging(setupConfig: LoggingSetup): void {
  * @param {string} [params.context] - The context of the log
  * @param {string[]} [params.tags] - Tags for log identification
  */
-const logInfo = (params: LogParams) => {
+const logInformation = (params: LogParams) => {
   handleLog({
     ...params,
     type: LOG_TYPE.INFORMATION,
     color: params.messageColor,
   });
 };
+
+const logInfo = logInformation;
 
 /**
  * Logs warning messages with optional metadata such as source, function name, line number, message, and more.
@@ -75,6 +78,8 @@ const logWarning = (params: LogParams) => {
     color: params.messageColor ?? 'orange',
   });
 };
+
+const logWarn = logWarning;
 
 /**
  * Logs error messages with optional metadata such as source, function name, line number, message, and more.
@@ -102,9 +107,9 @@ const logError = (params: LogParams) => {
  * General logging function that handles different log types (INFO, WARNING, ERROR).
  *
  * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
- * @param {LogParams} params - The logging parameters
+ * @param {ConsoleLogParams} params - The logging parameters
  */
-const log = (type: LOG_TYPE = LOG_TYPE.INFORMATION, params: LogParams) => {
+const loglens = ({ type, ...params }: ConsoleLogParams) => {
   switch (type) {
     case LOG_TYPE.INFORMATION:
       logInfo(params);
@@ -120,6 +125,8 @@ const log = (type: LOG_TYPE = LOG_TYPE.INFORMATION, params: LogParams) => {
   }
 };
 
+const log = loglens;
+
 /**
  * Logs messages in development mode only.
  *
@@ -128,16 +135,16 @@ const log = (type: LOG_TYPE = LOG_TYPE.INFORMATION, params: LogParams) => {
  */
 const logDev = (type: LOG_TYPE = LOG_TYPE.INFORMATION, params: LogParams) => {
   if (isDev()) {
-    log(type, params);
+    log({ type, ...params });
   }
 };
 
 const logDevInfo = (params: LogParams) =>
-  isDev() && log(LOG_TYPE.INFORMATION, params);
+  isDev() && loglens({ type: LOG_TYPE.INFORMATION, ...params });
 const logDevError = (params: LogParams) =>
-  isDev() && log(LOG_TYPE.ERROR, params);
-const logDevWarning = (params: LogParams) =>
-  isDev() && log(LOG_TYPE.WARNING, params);
+  isDev() && loglens({ type: LOG_TYPE.ERROR, ...params });
+const logDevWarn = (params: LogParams) =>
+  isDev() && loglens({ type: LOG_TYPE.WARNING, ...params });
 
 /**
  * Clears the console log.
@@ -266,13 +273,15 @@ const logGroups = (): void => {
 
 export {
   log,
+  loglens,
   logError,
   logInfo,
+  logWarn,
   logWarning,
   logDev,
   logDevInfo,
   logDevError,
-  logDevWarning,
+  logDevWarn,
   clearLog,
   logDivider,
   logHeader,

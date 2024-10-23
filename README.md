@@ -56,7 +56,7 @@ https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
       - [\*Dynamic information detection](#dynamic-information-detection)
   - [Logging Functions](#logging-functions)
       - [log](#log)
-      - [logInfo, logWarning, logError](#loginfo-logwarning-logerror)
+      - [logInfo, logWarn, logError](#loginfo-logWarn-logerror)
       - [Dev functions](#dev-functions)
   - [Context](#context)
       - [How Context works](#how-context-works)
@@ -71,6 +71,7 @@ https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
   - [Framework specicific](#framework-specicific)
   - [Headers](#headers)
   - [Callouts](#callouts)
+  - [Dividers](#dividers)
   - [Configuration](#configuration)
       - [setupLogging](#setuplogging)
         - [CLOCK\_TYPE](#clock_type)
@@ -169,7 +170,7 @@ All logging functions have the following optional parameters that help format th
 
 ```typescript
 // this will always show the filename and functionName, despite minification
-log({
+loglens({
   source: 'App.tsx',
   functionName: 'startApp',
 )}
@@ -187,14 +188,16 @@ Create a log where you define the type: INFORMATION, ERROR or WARNING.
 import { log } from 'consolens';
 
 // Simple information log
-log({
+loglens({
   type: LOG_TYPE.INFORMATION
   message: 'paginationData has changed',
   args: [paginationData]
 });
 
 // Warning on user authentication failure
-log({
+// loglens and log are the same and both recognized functions on consolens,
+// but we recommend the use of loglens for easier sepparation and identification
+loglens({
   type: LOG_TYPE.WARNING
   source: 'Login.tsx',
   functionName: 'authentication',
@@ -202,18 +205,30 @@ log({
 });
 ```
 
-#### logInfo, logWarning, logError
+#### logInfo, logWarn, logError
 Logs informational messages with optional metadata such as source, function name, message, and more.
 
 ```typescript
-import { logInfo, logWarning, logError } from 'consolens';
+import { logInfo, logWarn, logError } from 'consolens';
 
-// this will create a consolens log
+// this will create a console log
+// same as logInformation
 logInfo({
-  isEffect: true,
   message: 'Application initialized successfully!',
-  tags: [loading, error],
 });
+
+// this will create a console warn
+// same as logWarning
+logWarn({
+  message: 'Attention, this feature will be disabled soon!',
+});
+
+// this will create a console error passing the error as parameter
+logError({
+  message: 'There was an error while loading data',
+  args: [error],
+});
+
 ```
 
 #### Dev functions
@@ -221,7 +236,7 @@ logInfo({
 This functions will only log during development mode.
 
 ```typescript
-import { logDevInfo, logDevWarning, logDevError } from 'consolens';
+import { logDevInfo, logDevWarn, logDevError } from 'consolens';
 
 // Information log: Logs informational messages with optional metadata such as source, function name, message, and more.
 logDevInfo({
@@ -230,7 +245,7 @@ logDevInfo({
 });
 
 // Warning log: Logs warnings with metadata such as source, function name, message, and more.
-logDevWarning({
+logDevWarn({
   message: 'Data fetch returned incomplete results.',
   tags: ['fetch', dataObject],
 });
@@ -306,6 +321,9 @@ Each tag receives a dynamic color. Recurring tags keeps the same color everytime
 
 A **LogGroup** is a collection of related log messages grouped under a single title, enhancing the console UI by visually separating these groups. Any log messages assigned to a group are hidden by default and are only displayed when the entire group is shown.
 
+This is still a beta function.. 
+  ...We are releasing the final version still in 10/2024
+
 ### Displaying Groups
 
 - To display all messages within a specific group, use the `logGroup(groupId)` function. This will reveal all the messages associated with the specified group.
@@ -362,6 +380,24 @@ This will print a callout with a title and an icon
 
 ---
 
+## Dividers
+
+You can create dividers on console to facilitate separation of informations.
+
+```typescript
+import { logDivider } from 'consolens';
+
+//optionally you can pass a custom char and the length of the divider
+
+logDivider();
+
+```
+This will print a divider on console:
+
+===========================
+
+---
+
 ## Configuration
 
 **Consolens**  allows you to customize your logging setup with the following options:
@@ -413,46 +449,46 @@ logDevInfo({
 
 We are constantly improving our package, so these are a few things that what you could expect for the next releases:
 
-☐ Fix know issues
-  ✅ default console log tracing
-  ☐ file openning
+- ☐ Simples log(without typed parameters / any)
+  - ✅ message and args recognition
 
-☐ Setup configuration
-  ☐ complete configurations
-    ☐ toggle multilne
-    ☐ toggle properties descriptions
-    ☐ switch group behavior
-      ☐ tradional
-      ☐ show on start
-      ☐ show on end(requested)
-    ☐ switch group display
-      ☐ default
-      ☐ rounded centered
-      ☐ squared anchored right
-  ☐ Theming 🎨
-    ☐ at least 4 options of themes
+- ☐ Fix know issues
+  - ✅ default console log tracing
 
-☐ enhanced grouping
-  ✅ TRADITIONAL
-  ☐ DISPLAY_ON_START
-  ☐ DISPLAY_ON_END
+- ☐ Setup configuration
+  -  ☐ complete configurations
+     -  ☐ toggle multilne
+     - ☐ toggle properties descriptions
+    - ☐ switch group behavior
+      - ☐ tradional
+      - ☐ show on start
+      - ☐ show on end(requested)
+    - ☐ switch group display
+      - ☐ default
+      - ☐ rounded centered
+      - ☐ squared anchored right
+  - ☐ Theming 🎨
+    - ☐ at least 4 options of themes
 
-✅ snippets for VS Code 
-  ✅ consoles-snippets for VS Code (released) 
-  ☐ framework focused snippets 
+- ☐ enhanced grouping
+  - ✅ TRADITIONAL
+  - ☐ DISPLAY_ON_START
+  - ☐ DISPLAY_ON_END
 
-☐ Automatic informations(source, line, functions)
-  ☐ Framework hooks identification
+- ✅ snippets for VS Code 
+  - ✅ consoles-snippets for VS Code (released) 
+  - ☐ framework focused snippets 
 
-☐ Simples log(without typed parameters / any)
-  ✅ message and args recognition
+- ✅ Automatic informations(source, line, functions)
+  - ☐ Framework hooks identification
 
+- ☐ source file openning
 
 We are also working on other repos to create:
-☐ a guide website (work in-progress)
-☐ a codelens-examples repository
-☐ a Chrome extension
-  ☐ consolens visual to all logs(for all sites) 
+- ☐ a guide website (work in-progress)
+- ☐ a codelens-examples repository
+- ☐ a Chrome extension
+  - ☐ consolens visual to all logs(for all sites) 
 
 ---
 
