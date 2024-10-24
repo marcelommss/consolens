@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0] - 2024-10-24
+### Added
+Added `interceptLogs` function.
+- `true`: enables the interception of console logs
+- `false`: disables this mechanism
+
 ## [1.0.18] - 2024-10-23
 ### Added
 Added `multiline` and `displayTitles` options on configuration setup.
