@@ -2,6 +2,7 @@ import {
   getLoggingConfiguration,
   initializeLogging,
   initializeTags,
+  setupLogInterception,
 } from './services/configurations';
 import isDev from './helpers/environment.helper';
 import {
@@ -30,8 +31,16 @@ import { identifyMessageAndArgs } from './helpers/files.helper';
 export function setupLogging(setupConfig: LoggingSetup): void {
   // Update the internal configuration
   initializeLogging(setupConfig);
-  if (setupConfig?.interceptLogs) initializeLoggingMiddleware();
   initializeTags();
+}
+
+/**
+ * Enable or disable log interception.
+ *
+ * @param {boolean} enableInterception - value to enable/disable the logging interception.
+ */
+export function interceptLogs(enableInterception: boolean): void {
+  setupLogInterception(enableInterception);
 }
 
 /**

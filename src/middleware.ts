@@ -227,6 +227,7 @@ const interceptConsoleLogs = (): void => {
     type: LOG_HEADER_TYPE.H5,
   });
 };
+
 /**
  * Automatically starts the middleware on application initialization.
  * Works for both browser and Node.js environments.
@@ -253,9 +254,30 @@ const initializeLoggingMiddleware = (): void => {
   }
 };
 
+/**
+ * Stops the logging middleware.
+ */
+const stopLoggingMiddleware = (): void => {
+  if (getOriginalLog())
+    console.log = (...args: any[]) => getOriginalLog()?.(args);
+
+  if (getOriginalLog())
+    console.log = (...args: any[]) => getOriginalWarn()?.(args);
+
+  if (getOriginalLog())
+    console.log = (...args: any[]) => getOriginalError()?.(args);
+
+  logCallout({
+    title: 'consolens stopped intercepting log messages',
+    icon: Symbols[Icons.Search],
+    type: LOG_HEADER_TYPE.H5,
+  });
+};
+
 export {
   interceptConsoleLogs,
   initializeLoggingMiddleware,
+  stopLoggingMiddleware,
   getOriginalLog,
   getOriginalWarn,
   getOriginalError,

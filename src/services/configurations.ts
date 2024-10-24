@@ -7,6 +7,10 @@ import {
   LoggingSetup,
 } from '../types/index';
 import { logHeader } from '../logging';
+import {
+  initializeLoggingMiddleware,
+  stopLoggingMiddleware,
+} from '../middleware';
 
 // Internal master configuration object
 const masterLoggingConfig: LoggingConfiguration = {
@@ -50,10 +54,28 @@ export function updateLoggingConfiguration(config: LoggingConfiguration): void {
  */
 export function initializeLogging(setupConfig: LoggingSetup): void {
   Object.assign(masterLoggingConfig, setupConfig);
+  if (setupConfig?.interceptLogs) initializeLoggingMiddleware();
   logHeader({
     title: 'Configuration set on Consolens!',
     type: LOG_HEADER_TYPE.H5,
   });
+}
+
+/**
+ * Sets up the logging interception.
+ *
+ * @param {boolean} enableInterception - Configuration object to set up logging.
+ */
+export function setupLogInterception(enableInterception: boolean): void {
+  Object.assign(masterLoggingConfig, {
+    ...masterLoggingConfig,
+    interceptLogs: enableInterception,
+  });
+  if (enableInterception) {
+    initializeLoggingMiddleware();
+  } else {
+    stopLoggingMiddleware();
+  }
 }
 
 /**

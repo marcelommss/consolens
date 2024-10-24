@@ -6,11 +6,6 @@ import { CLOCK_TYPE, GROUP_BEHAVIOUR, LOG_HEADER_TYPE, THEME } from './options';
  */
 export interface LoggingSetup {
   /**
-   * Indicates whether the package should intercept default console calls (e.g., console.log, console.warn).
-   */
-  interceptLogs: boolean;
-
-  /**
    * log in multiple lines to facilitate reading.
    * default is true
    */
@@ -21,6 +16,11 @@ export interface LoggingSetup {
    * default is true
    */
   displayTitles?: boolean;
+
+  /**
+   * Indicates whether the package should intercept default console calls (e.g., console.log, console.warn).
+   */
+  interceptLogs: boolean;
 
   /**
    * Defines how the date and time should be displayed in log messages.

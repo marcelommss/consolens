@@ -6,36 +6,31 @@
 
 ---
 
-Improve your development speed by taking advantage of our VS Code extension:
-consolens-snippets
+### VS CODE EXTENSION
+
+Enhance consolens usage by taking advantage of our cool snippets extensions on VS CODE:
+   `consolens-snippets`
+
+https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
 
 ---
 
 ## Features
 
-- **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
-- **Improved console UI**: Massivelly improves the readability of your logs with a much cleanner, space UI.
+- **Improved console UI**: Massivelly improves the readability of your logs with a much cleanner, spaced and informative UI.
+- **Dynamic informations**: Automatically designs your log based on the context and informations, dynamically providing unique symbols and behaviours to your logs.
+- **Tagging and Context**: Auto-tag logs with colors for easy identification; context info.
+- **Customizable output**: Modify colors, tags, and formatting for logs.
+- **Development logging**: Choose which logs are going to appear only in  development environments.
+- **Formatted headers and callouts**: Create structured, styled log headers and callouts with icons.
+- **Frameworks identification**: Automatic creation of framwework specific info.
 - **Enhanced Grouping!**: Enhanced grouping with multiple groups amd multiple levels, enabling concurrent groups, choose the behaviour that works best for you!
     Enhanced grouping of three types:
   - at start: only show group messages, holding other messages until the grouping ends
   - at end: show group messages only when the group ends and showGroup is triggered
   - traditional: as common console.group, all messages are displayed inside a group when grouping starts
-- **Customizable output**: Modify colors, tags, and formatting for logs.
-- **Development logging**: Choose which logs are going to appear only in  development environments.
-- **Tagging**: Auto-tag logs with colors for easy identification.
-- **Formatted headers**: Create structured, styled log headers for readability.
-- **Full TypeScript support**: Leverage powerful type definitions with rich autocompletion and documentation.
 - **Middleware interception**: Automatically intercept and handle `console.log`, `console.warn`, and `console.error` calls.
-- **Non-intrusive**: Bypass middleware interception for specific logs, such as styled headers.
-
----
-
-### VS CODE INTEGRATION
-
-We have recently launched our cool snippets extensions on VS CODE:
-   `consolens-snippets`
-
-https://marketplace.visualstudio.com/items?itemName=Hackem.consolens-snippets
+- **Full TypeScript support**: Leverage powerful type definitions with rich autocompletion and documentation.
 
 ---
 
@@ -86,11 +81,10 @@ To install Consolens, run:
 
 ```bash
 npm install consolens
-```
-
-or with Yarn:
-```bash
+or
 yarn add consolens
+or
+pnpm add consolens
 ```
 
 ---
@@ -99,23 +93,26 @@ yarn add consolens
 
 ### Basic Setup
 
-*not mandatory*
-First, you can configure the logging package:
+You can change the configuration of consolens at any time by:
 
 ```typescript
 import { setupLogging } from 'consolens';
 
-// Set up the logging configuration
+// Set up consolens configuration
 setupLogging({
-  // If true middleware interception or false to not interfer on other logs
+  // log in multiple lines to facilitate reading
+  multiline: true, 
+  // show value's titles like(message, args, function)
+  displayTitles: true, 
+  // enables middleware interception of logs
   interceptLogs: true, 
-  //CLOCK_TYPE.TIME: Display only time in logs
+  // display style for date and time in logs
   datetimeDisplayType: CLOCK_TYPE.TIME, 
-  //LOG_HEADER_TYPE.H2: Sets the size of the header text
-  defaultHeaderSize: LOG_HEADER_TYPE.H2, 
-  //LOG_HEADER_TYPE.H3: Sets the size of the callout text
-  defaultCalloutSize: LOG_HEADER_TYPE.H3, 
-  //color of the callout border
+  // sets the default size of header text
+  defaultHeaderSize: LOG_HEADER_TYPE.H3, 
+  // sets the default size of callout text
+  defaultCalloutSize: LOG_HEADER_TYPE.H4, 
+  // color of the callout border
   defaultCalloutBorder: '#FFFFFF55', 
 });
 ```
@@ -123,11 +120,12 @@ setupLogging({
 or skip this step if you want the default configuration:
 ```typescript
   interceptLogs: false,
-  //CLOCK_TYPE.DATETIME: Display both date and time in logs
+  multiline: true, 
+  displayTitles: true, 
   datetimeDisplayType: CLOCK_TYPE.DATETIME,
 ```
 
-To intercept default console entries, you must call setupLogging on your system start with interceptLogs: true.
+To intercept default console entries, you must call setupLogging on your system start with interceptLogs: true or call interceptLogs(true).
 
 ---
 
@@ -170,19 +168,18 @@ import { log } from 'consolens';
 
 // Simple information log
 loglens({
-  type: LOG_TYPE.INFORMATION
   message: 'paginationData has changed',
-  args: [paginationData]
 });
 
 // Warning on user authentication failure
 // loglens and log are the same and both recognized functions on consolens,
+// optional context parameter
 // but we recommend the use of loglens for easier sepparation and identification
 loglens({
   type: LOG_TYPE.WARNING
-  source: 'Login.tsx',
-  functionName: 'authentication',
   message: 'Authenticate user failed',
+  context: 'AUTH',
+  args: [paginationData, argum]
 });
 ```
 
