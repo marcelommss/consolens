@@ -19,6 +19,7 @@ import {
   LoggingSetup,
   LogHeaderParameters,
   LogParams,
+  Symbols,
 } from './types/index';
 import { identifyMessageAndArgs } from './helpers/files.helper';
 
@@ -281,7 +282,7 @@ function logCallout({ title, icon, type }: LogCalloutParameters): void {
 
   const padding = '12px'; // Padding for visual separation of the callout
   const leftBorder = `solid 4px #FFFFFF55`; // Left border for callout
-  const displayIcon = icon ? `${icon} ` : ''; // Add the icon with a space after it
+  const displayIcon = icon ? `${Symbols[icon]} ` : ''; // Add the icon with a space after it
   const filler = '\u00A0'.repeat(500);
   // Use the original console.log to avoid interception by middleware
   getOriginalLog()?.(
