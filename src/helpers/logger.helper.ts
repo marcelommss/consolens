@@ -38,6 +38,7 @@ import { MessageParams, MessageStyleParams } from '../types/logging';
  * @returns {string} - The formatted log message
  */
 const createMessage = ({
+  config,
   type,
   source,
   functionName,
@@ -69,44 +70,58 @@ const createMessage = ({
       break;
   }
 
-  let data = '';
+  let data: string = '';
+  let spacePoints: number = 0;
   // if (hasVerticalSpace) data += `%c  `;
   data = `%c${displayDT} ${symbol}%c`;
-  if (context) data += `%c« ${context} »`;
+
+  if (context) {
+    ++spacePoints;
+    data += `%c« ${context} »`;
+  }
 
   if (source) {
+    ++spacePoints;
     data += `%c /${source}`;
     if (line !== undefined) data += `:%c${line}`;
   }
 
-  // if (symbol) data += `%c${symbol}`;
+  // if (symbol) {
+  //   ++spacePoints;
+  //   data += `%c${symbol}`;
+  // }
 
-  if (functionName) data += `%cfunction: %c${functionName}`;
+  if (functionName) {
+    spacePoints += 1;
+    data += `${config.displayTitles ? '%cfunction: ' : ''}%c${functionName}`;
+  }
 
-  if (isEffect) data += `%c⚡effect`;
+  if (isEffect) {
+    ++spacePoints;
+    data += `%c⚡effect`;
+  }
 
   if (tags && tags.length > 0) {
+    spacePoints += tags.length;
     tags.forEach((tag) => (data += `%c${tag}`));
     data += `%c`;
   }
 
   if (message) {
-    data += `${
-      context ||
-      source ||
-      line ||
-      functionName ||
-      isEffect ||
-      (tags && tags?.length > 0)
-        ? '\n'
-        : ''
-    }\t%cmessage:  ${hasMessageColor ? '%c%c' : '%c'}${message}`;
+    if (spacePoints > 2)
+      data += config.multiline || spacePoints > 4 ? '\n' : '';
+    data += `\t${config.displayTitles ? '%cmessage:  ' : ''}${
+      hasMessageColor ? '%c%c' : '%c'
+    }${message}`;
   }
 
   if (hasArgs) {
-    let customIdentifier = 'args:';
-    if (isError) customIdentifier = '▼';
-    if (type === LOG_TYPE.WARNING) customIdentifier = '▼ args:';
+    let customIdentifier = '';
+    if (config.displayTitles) {
+      customIdentifier = 'args:';
+      if (isError) customIdentifier = '▼';
+      if (type === LOG_TYPE.WARNING) customIdentifier = '▼ args:';
+    }
     data += `%c\n\t\t   ${customIdentifier}%c  `;
   }
 
@@ -134,6 +149,7 @@ const createMessage = ({
  * @returns {string[]} - The array of CSS styles to apply to the log message
  */
 const createStyles = ({
+  config,
   baseColor,
   source,
   functionName,
@@ -168,11 +184,15 @@ const createStyles = ({
   // if (symbol)
   //   styles.push('font-weight: bold; color: #cfebfc;  padding: 0 15px;');
 
-  if (functionName)
+  if (functionName) {
+    if (config.displayTitles)
+      styles.push('padding: 0 0 0 18px; color: #FFFFFF55;');
     styles.push(
-      'padding: 0 0 0 18px; color: #FFFFFF55;',
-      'padding: 0 15px 0 0; font-weight: bold; color:#63b9ed;'
+      `padding: 0 15px 0 ${
+        config.displayTitles ? '0' : '18px'
+      }; font-weight: bold; color:#63b9ed;`
     );
+  }
 
   if (isEffect)
     styles.push('font-weight: normal; color: #fe9901;  padding: 0 15px;');
@@ -190,8 +210,8 @@ const createStyles = ({
 
   // Apply styling for the message, if present
   if (message) {
+    if (config.displayTitles) styles.push('color: #FFFFFF55;');
     styles.push(
-      'color: #FFFFFF55;',
       'opacity:1;font-weight: bold; padding: 5px 0;'
       // 'font-weight: bold; padding: 5px 0; border-bottom: solid 1px #FFFFFF44'
     );
@@ -201,7 +221,8 @@ const createStyles = ({
   }
 
   if (hasArgs) {
-    styles.push(`padding-top: 2px; padding-bottom: 6px; color: #FFFFFF55; `);
+    if (config.displayTitles)
+      styles.push(`padding-top: 2px; padding-bottom: 6px; color: #FFFFFF55; `);
     styles.push(`padding-top: 2px; padding-bottom: 6px;`);
   }
 

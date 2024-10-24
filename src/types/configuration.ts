@@ -12,8 +12,15 @@ export interface LoggingSetup {
 
   /**
    * log in multiple lines to facilitate reading.
+   * default is true
    */
   multiline?: boolean;
+
+  /**
+   * show values titles like(message, args, function).
+   * default is true
+   */
+  displayTitles?: boolean;
 
   /**
    * Defines how the date and time should be displayed in log messages.

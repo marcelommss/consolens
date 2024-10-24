@@ -6,6 +6,7 @@ import {
   LoggingConfiguration,
   LoggingSetup,
 } from '../types/index';
+import { logHeader } from '../logging';
 
 // Internal master configuration object
 const masterLoggingConfig: LoggingConfiguration = {
@@ -14,6 +15,8 @@ const masterLoggingConfig: LoggingConfiguration = {
   loadedTags: false, // Indicates if the tag colors have been loaded
   tagColors: {}, // Empty object to store tag colors
   colorCounter: 0, // Counter starts at 0
+  multiline: true,
+  displayTitles: false,
   defaultHeaderSize: LOG_HEADER_TYPE.H2,
   defaultCalloutSize: LOG_HEADER_TYPE.H3,
   defaultCalloutBorder: '#FFFFFF55',
@@ -47,6 +50,10 @@ export function updateLoggingConfiguration(config: LoggingConfiguration): void {
  */
 export function initializeLogging(setupConfig: LoggingSetup): void {
   Object.assign(masterLoggingConfig, setupConfig);
+  logHeader({
+    title: 'Configuration set on Consolens!',
+    type: LOG_HEADER_TYPE.H5,
+  });
 }
 
 /**

@@ -5,12 +5,7 @@ import {
 } from './helpers/files.helper';
 import { handleMessage } from './helpers/logger.helper';
 import { logCallout } from './logging';
-import {
-  ConsoleMessage,
-  LOG_HEADER_TYPE,
-  LOG_TYPE,
-  LogMessage,
-} from './types/index';
+import { LOG_HEADER_TYPE, LOG_TYPE, LogMessage } from './types/index';
 
 // Variable to store the original console.log
 let originalLog: typeof console.log | null = null;
@@ -227,7 +222,7 @@ const interceptConsoleLogs = (): void => {
     handleConsoleMessage(LOG_TYPE.ERROR, args);
 
   logCallout({
-    title: 'Welcome to Consolens',
+    title: 'consolens is now intercepting all log messages',
     icon: Symbols[Icons.Search],
     type: LOG_HEADER_TYPE.H5,
   });

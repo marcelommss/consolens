@@ -463,9 +463,9 @@ We are constantly improving our package, so these are a few things that what you
   - ✅ message and args recognition
 
 - ☐ Setup configuration
-  -  ☐ complete configurations
-     -  ☐ toggle multilne
-     - ☐ toggle properties descriptions
+  -  ✅ complete configurations
+     - ✅ toggle multilne
+     - ✅ toggle properties titles
     - ☐ switch group behavior
       - ☐ tradional
       - ☐ show on start
