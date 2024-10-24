@@ -5,6 +5,7 @@ import {
 } from './helpers/files.helper';
 import { handleMessage } from './helpers/logger.helper';
 import { logCallout } from './logging';
+import { getLoggingConfiguration } from './services/configurations';
 import { LOG_HEADER_TYPE, LOG_TYPE, LogMessage } from './types/index';
 
 // Variable to store the original console.log
@@ -193,8 +194,8 @@ const handleConsoleMessage = (type: LOG_TYPE, args: any[]) => {
           : traceInfo.functionName;
     }
   }
-
-  handleMessage(logMessage);
+  const config = getLoggingConfiguration();
+  handleMessage(config, logMessage);
 };
 
 /**

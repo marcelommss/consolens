@@ -2,6 +2,7 @@ import {
   CLOCK_TYPE,
   GROUP_BEHAVIOUR,
   LOG_TYPE,
+  LoggingConfiguration,
   LogMessage,
 } from '../types/index';
 import { getTagColor } from '../services/tags';
@@ -82,7 +83,10 @@ const createMessage = ({
 
   if (source) {
     ++spacePoints;
-    data += `%c /${source}`;
+
+    // const filler = '\u00A0'.repeat(500);
+    // const filePath = getCurrentUrl();
+    data += `%c /%c${source}`;
     if (line !== undefined) data += `:%c${line}`;
   }
 
@@ -168,25 +172,32 @@ const createStyles = ({
     `color: ${baseColor}; font-weight: bold; font-size: 12px; line-height: 2.2; background-color: #ffffff12; border-radius: 16px; padding: 0px 10px; margin-top:2px`,
     'border:none;'
   );
+
   if (context)
     styles.push(
       'font-weight: 800; font-size: 11.5px; color: #000000DD; background-color: #d8c752; border-radius: 16px; padding: 4px 10px; margin-left: 12px; margin-top: -2px margin-bottom: 12px;'
     );
 
-  if (source) {
-    styles.push(
-      'font-weight: normal; color: #56e05e; padding: 0 0 0 10px; line-height: 2.4;'
-    );
-
-    if (line !== undefined) styles.push('font-weight: 600; color: #dfecf9;');
-  }
-
   // if (symbol)
   //   styles.push('font-weight: bold; color: #cfebfc;  padding: 0 15px;');
 
+  if (source) {
+    styles.push(
+      'padding: 0 0 0 10px; color: #7bc6ea;',
+      'font-weight: normal; color: #7bc6ea; text-decoration: underline;padding: 0 0 0 2px; line-height: 2.4;'
+    );
+
+    if (line !== undefined)
+      styles.push(
+        'color: #7bc6ea; text-decoration: underline; font-weight: 600; '
+      );
+  }
+
   if (functionName) {
     if (config.displayTitles)
-      styles.push('padding: 0 0 0 18px; color: #FFFFFF55;');
+      styles.push(
+        'text-decoration: none; padding: 0 0 0 18px; color: #FFFFFF55;'
+      );
     styles.push(
       `padding: 0 15px 0 ${
         config.displayTitles ? '0' : '18px'
@@ -195,12 +206,14 @@ const createStyles = ({
   }
 
   if (isEffect)
-    styles.push('font-weight: normal; color: #fe9901;  padding: 0 15px;');
+    styles.push(
+      'text-decoration: none; font-weight: normal; color: #fe9901;  padding: 0 15px;'
+    );
 
   if (tags && tags.length > 0) {
     tags.forEach((tag) =>
       styles.push(
-        `font-weight: 800; font-size: 11.5px; color:#000000DD; background-color: ${getTagColor(
+        `text-decoration: none; font-weight: 800; font-size: 11.5px; color:#000000DD; background-color: ${getTagColor(
           tag
         )}DD; border-radius: 16px; padding: 4px 10px; margin-left: 12px; margin-top: -2px margin-bottom: 12px;`
       )
@@ -210,7 +223,8 @@ const createStyles = ({
 
   // Apply styling for the message, if present
   if (message) {
-    if (config.displayTitles) styles.push('color: #FFFFFF55;');
+    if (config.displayTitles)
+      styles.push('text-decoration: none; color: #FFFFFF55;');
     styles.push(
       'opacity:1;font-weight: bold; padding: 5px 0;'
       // 'font-weight: bold; padding: 5px 0; border-bottom: solid 1px #FFFFFF44'
@@ -222,7 +236,9 @@ const createStyles = ({
 
   if (hasArgs) {
     if (config.displayTitles)
-      styles.push(`padding-top: 2px; padding-bottom: 6px; color: #FFFFFF55; `);
+      styles.push(
+        `text-decoration: none; padding-top: 2px; padding-bottom: 6px; color: #FFFFFF55; `
+      );
     styles.push(`padding-top: 2px; padding-bottom: 6px;`);
   }
 
@@ -329,29 +345,51 @@ const prepareLog = (params: LogMessage, baseColor: string) => {
  *
  * @param {LogMessage} message - The log message object containing type, color, and other parameters.
  */
-export const handleMessage = (message: LogMessage) => {
+export const handleMessage = (
+  config: LoggingConfiguration,
+  message: LogMessage
+) => {
   const { data, styles, args } = message.isFromDefaultConsole
     ? createLog(message, message.color ?? 'lightgray')
     : prepareLog(message, message.color ?? 'lightgray');
 
   // Log according to the log type and include args
-  switch (message.type) {
+  if (args) logOnConsole(config, message.type, data, ...styles, ...args);
+  else logOnConsole(config, message.type, data, ...styles);
+};
+
+/**
+ * Handles default logging path.
+ *
+ * @param {LOG_TYPE} type - The log type.
+ * @param {any} parms - The log data.
+ */
+const logOnConsole = (
+  config: LoggingConfiguration,
+  type?: LOG_TYPE,
+  ...params: any
+) => {
+  if (!type) setTimeout(console.info.bind(console, ...params));
+  switch (type) {
     case LOG_TYPE.INFORMATION:
-      if (args) console.info(data, ...styles, ...args);
-      else console.info(data, ...styles);
+      if (config.hideLoggingPath) {
+        setTimeout(console.info.bind(console, ...params));
+      } else {
+        console.info(params);
+      }
       break;
     case LOG_TYPE.WARNING:
-      if (args) getOriginalWarn()?.(data, ...styles, ...args);
-      else getOriginalWarn()?.(data, ...styles);
+      if (config.hideLoggingPath) {
+        setTimeout(getOriginalWarn()?.bind(console, ...params));
+      } else {
+        getOriginalWarn()?.(params);
+      }
       break;
     case LOG_TYPE.ERROR:
-      if (args) getOriginalError()?.(data, ...styles, ...args);
-      else getOriginalError()?.(data, ...styles);
+      setTimeout(getOriginalError()?.bind(console, ...params));
       break;
     default:
-      // Default to info
-      if (args) console.info(data, ...styles, ...args);
-      else console.info(data, ...styles);
+      setTimeout(console.log.bind(console, ...params));
   }
 };
 
@@ -385,7 +423,7 @@ export const handleLog = (message: LogMessage) => {
   }
 
   // Log individual message immediately
-  return handleMessage(message);
+  return handleMessage(config, message);
 };
 
 /**
@@ -396,7 +434,8 @@ export const handleLog = (message: LogMessage) => {
  */
 export const handleGroup = (groupId?: string) => {
   const messages = getGroupMessages(groupId);
-  messages.forEach((message) => handleMessage(message));
+  const config = getLoggingConfiguration();
+  messages.forEach((message) => handleMessage(config, message));
 };
 
 /**
@@ -405,7 +444,8 @@ export const handleGroup = (groupId?: string) => {
  */
 export const handleAllGroups = () => {
   const allMessages = getAllMessages();
+  const config = getLoggingConfiguration();
 
   // Log each message sequentially
-  allMessages.forEach((message) => handleMessage(message));
+  allMessages.forEach((message) => handleMessage(config, message));
 };

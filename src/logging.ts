@@ -10,7 +10,7 @@ import {
   handleGroup,
   handleLog,
 } from './helpers/logger.helper';
-import { getOriginalLog, initializeLoggingMiddleware } from './middleware';
+import { getOriginalLog } from './middleware';
 import {
   ConsoleLogParams,
   LOG_HEADER_TYPE,

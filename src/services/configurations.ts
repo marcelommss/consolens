@@ -20,11 +20,12 @@ const masterLoggingConfig: LoggingConfiguration = {
   tagColors: {}, // Empty object to store tag colors
   colorCounter: 0, // Counter starts at 0
   multiline: true,
-  displayTitles: false,
-  defaultHeaderSize: LOG_HEADER_TYPE.H2,
-  defaultCalloutSize: LOG_HEADER_TYPE.H3,
+  displayTitles: true,
+  defaultHeaderSize: LOG_HEADER_TYPE.H3,
+  defaultCalloutSize: LOG_HEADER_TYPE.H4,
   defaultCalloutBorder: '#FFFFFF55',
   defaultGroupBehaviour: GROUP_BEHAVIOUR.TRADITIONAL,
+  hideLoggingPath: true,
 };
 
 /**

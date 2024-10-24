@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1] - 2024-10-24
+### Added
+- Added `hideLoggingPath` to setup
+
+### Changed
+Changed default configuration `displayTitles` to true
+  
 ## [1.1.0] - 2024-10-24
 ### Added
 Added `interceptLogs` function.
