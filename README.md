@@ -6,6 +6,11 @@
 
 ---
 
+Improve your development speed by taking advantage of our VS Code extension:
+consolens-snippets
+
+---
+
 ## Features
 
 - **Dynamic informations**: Automatically designs your log based on the context and its informations, dynamically providing unique symbols and behaviours to your logs.
