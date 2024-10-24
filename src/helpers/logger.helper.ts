@@ -17,6 +17,7 @@ import {
 import { findSymbol, KEYWORD_TYPES } from './icons.helper';
 import { findDataFromTrace, getCallingFile } from './files.helper';
 import { getOriginalWarn, getOriginalError } from '../middleware';
+import { MessageParams, MessageStyleParams } from '../types/logging';
 
 /**
  * Creates a formatted message string for the log based on the parameters and adds a symbol if needed.
@@ -49,24 +50,8 @@ const createMessage = ({
   tags,
   hasArgs,
   isError,
-  hasVerticalSpace,
   datetimeDisplayType = CLOCK_TYPE.DATETIME,
-}: {
-  type?: LOG_TYPE;
-  source?: string;
-  functionName?: string;
-  isEffect?: boolean;
-  hasMessageColor?: boolean;
-  message?: string;
-  line?: number;
-  symbol?: string;
-  context?: string;
-  tags?: string[];
-  hasArgs?: boolean;
-  isError?: boolean;
-  hasVerticalSpace?: boolean;
-  datetimeDisplayType?: CLOCK_TYPE;
-}) => {
+}: MessageParams) => {
   if (symbol === '') symbol = '🕒';
 
   let displayDT = '';
@@ -149,7 +134,6 @@ const createMessage = ({
  * @returns {string[]} - The array of CSS styles to apply to the log message
  */
 const createStyles = ({
-  type,
   baseColor,
   source,
   functionName,
@@ -160,22 +144,7 @@ const createStyles = ({
   context,
   tags,
   hasArgs,
-  hasVerticalSpace,
-}: {
-  type?: LOG_TYPE;
-  baseColor: string;
-  source?: string;
-  functionName?: string;
-  isEffect?: boolean;
-  messageColor?: string;
-  line?: number;
-  message?: string;
-  symbol?: string;
-  context?: string;
-  tags?: string[];
-  hasArgs?: boolean;
-  hasVerticalSpace?: boolean;
-}) => {
+}: MessageStyleParams) => {
   const styles: string[] = [];
   // if (hasVerticalSpace) styles.push('padding-top: 21px;');
 
@@ -272,6 +241,7 @@ const createLog = (logMessage: LogMessage, baseColor: string) => {
 
   const hasArgs = logMessage.args !== undefined && logMessage.args?.length > 0;
   const data = createMessage({
+    config,
     type: logMessage.type,
     source: logMessage.source,
     functionName: logMessage.functionName,
@@ -288,6 +258,7 @@ const createLog = (logMessage: LogMessage, baseColor: string) => {
   });
 
   const styles = createStyles({
+    config,
     type: logMessage.type,
     baseColor,
     source: logMessage.source,
