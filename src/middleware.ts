@@ -224,7 +224,7 @@ const interceptConsoleLogs = (): void => {
 
   logCallout({
     title: 'consolens is now intercepting all log messages',
-    icon: Symbols[Icons.Search],
+    icon: Icons.Search,
     type: LOG_HEADER_TYPE.H5,
   });
 };
@@ -270,7 +270,7 @@ const stopLoggingMiddleware = (): void => {
 
   logCallout({
     title: 'consolens stopped intercepting log messages',
-    icon: Symbols[Icons.Search],
+    icon: Icons.Search,
     type: LOG_HEADER_TYPE.H5,
   });
 };
