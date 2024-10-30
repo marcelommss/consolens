@@ -143,15 +143,20 @@ const isConsoleLogParams = (input: any): input is ConsoleLogParams => {
 /**
  * General logging function that handles different log types (INFO, WARNING, ERROR).
  *
- * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
- * @param {ConsoleLogParams} params - The logging parameters
+ * @param {ConsoleLogParams | string | any[]} inputs - The logging parameters or message.
  */
-const loglens = (...inputs: ConsoleLogParams | string | any | any[]) => {
-  if (!inputs) return;
-  if (typeof inputs === 'string') {
-    logInfo({ message: inputs });
-  } else if (isConsoleLogParams(inputs)) {
-    const { type, ...params } = inputs;
+const loglens = (...inputs: (ConsoleLogParams | string | any)[]) => {
+  if (!inputs || inputs.length === 0) return;
+
+  // Case 1: Single string input
+  if (inputs.length === 1 && typeof inputs[0] === 'string') {
+    logInfo({ message: inputs[0] });
+    return;
+  }
+
+  // Case 2: Single ConsoleLogParams input
+  if (inputs.length === 1 && isConsoleLogParams(inputs[0])) {
+    const { type, ...params } = inputs[0];
     switch (type) {
       case LOG_TYPE.INFORMATION:
         logInfo(params);
@@ -165,27 +170,23 @@ const loglens = (...inputs: ConsoleLogParams | string | any | any[]) => {
       default:
         logInfo(params);
     }
-  } else {
-    if (Array.isArray(inputs)) {
-      const { message, restArgs, isError } = identifyMessageAndArgs(inputs);
-
-      if (isError) {
-        if (message) {
-          logError({ message, args: restArgs });
-        } else {
-          logError({ args: inputs });
-        }
-      } else {
-        if (message) {
-          logInfo({ message, args: restArgs });
-        } else {
-          logInfo({ args: inputs });
-        }
-      }
-      return;
-    }
-    logInfo({ args: [inputs] });
+    return;
   }
+
+  // Case 3: Multiple inputs - identify message and args
+  if (inputs.length > 1) {
+    const { message, restArgs, isError } = identifyMessageAndArgs(inputs);
+
+    if (isError) {
+      logError({ message, args: restArgs });
+    } else {
+      logInfo({ message, args: restArgs });
+    }
+    return;
+  }
+
+  // Default case: Log inputs as args
+  logInfo({ args: [...inputs] });
 };
 
 const log = loglens;

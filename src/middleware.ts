@@ -1,4 +1,4 @@
-import { Icons, Symbols } from './data/icons.data';
+import { Icons } from './data/icons.data';
 import {
   findDataFromEntry,
   identifyMessageAndArgs,
@@ -152,7 +152,12 @@ const handleConsoleMessage = (type: LOG_TYPE, args: any[]) => {
     return;
   }
 
-  const { message, restArgs, isError } = identifyMessageAndArgs(args, type);
+  const config = getLoggingConfiguration();
+  const { message, restArgs, isError } = identifyMessageAndArgs(
+    args,
+    type,
+    config.displayTitles
+  );
 
   let logname = 'console.log';
   switch (type) {
@@ -195,7 +200,6 @@ const handleConsoleMessage = (type: LOG_TYPE, args: any[]) => {
           : traceInfo.functionName;
     }
   }
-  const config = getLoggingConfiguration();
   handleMessage(config, logMessage);
 };
 

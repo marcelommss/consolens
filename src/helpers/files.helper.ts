@@ -142,10 +142,13 @@ export const getCallingFile = (source?: string): string | undefined => {
  */
 export function identifyMessageAndArgs(
   args: any[],
-  type?: LOG_TYPE
+  type?: LOG_TYPE,
+  showInterceptMessage?: boolean
 ): ConsoleMessage {
   const INTERCEPT_MESSAGE = 'Intercepted log message';
-  let message: string | undefined = INTERCEPT_MESSAGE;
+  let message: string | undefined = showInterceptMessage
+    ? INTERCEPT_MESSAGE
+    : undefined;
   let restArgs: any[] | undefined = args;
   let isError: boolean = false;
 
