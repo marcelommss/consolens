@@ -146,12 +146,12 @@ const isConsoleLogParams = (input: any): input is ConsoleLogParams => {
  * @param {LOG_TYPE} type - The type of log (INFO, WARNING, ERROR)
  * @param {ConsoleLogParams} params - The logging parameters
  */
-const loglens = (input: ConsoleLogParams | string | any) => {
-  if (!input) return;
-  if (typeof input === 'string') {
-    logInfo({ message: input });
-  } else if (isConsoleLogParams(input)) {
-    const { type, ...params } = input;
+const loglens = (...inputs: ConsoleLogParams | string | any | any[]) => {
+  if (!inputs) return;
+  if (typeof inputs === 'string') {
+    logInfo({ message: inputs });
+  } else if (isConsoleLogParams(inputs)) {
+    const { type, ...params } = inputs;
     switch (type) {
       case LOG_TYPE.INFORMATION:
         logInfo(params);
@@ -166,25 +166,25 @@ const loglens = (input: ConsoleLogParams | string | any) => {
         logInfo(params);
     }
   } else {
-    if (Array.isArray(input)) {
-      const { message, restArgs, isError } = identifyMessageAndArgs(input);
+    if (Array.isArray(inputs)) {
+      const { message, restArgs, isError } = identifyMessageAndArgs(inputs);
 
       if (isError) {
         if (message) {
           logError({ message, args: restArgs });
         } else {
-          logError({ args: input });
+          logError({ args: inputs });
         }
       } else {
         if (message) {
           logInfo({ message, args: restArgs });
         } else {
-          logInfo({ args: input });
+          logInfo({ args: inputs });
         }
       }
       return;
     }
-    logInfo({ args: [input] });
+    logInfo({ args: [inputs] });
   }
 };
 
