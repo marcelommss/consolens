@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2] - 2024-10-30
+### Added
+- Added `logDebug`
+
+### Changed
+- Now simple log `log, loglens` can receive any parameters
+  
+### Fixes
+- Fixed `logCallout` symbols
+
 ## [1.1.1] - 2024-10-24
 ### Added
 - Added `hideLoggingPath` to setup
