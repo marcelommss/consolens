@@ -134,6 +134,7 @@ function shouldInterceptLog(logType: LOG_TYPE, entries: string[]): boolean {
       'at log',
       'handleMessage',
     ],
+    [LOG_TYPE.DEBUG]: ['at logDebug', 'at log', 'handleMessage'],
   }[logType];
   // Check if any stack trace entry matches the log functions and is from logger.helper.ts
   return entries.some((entry) => {
