@@ -27,6 +27,11 @@ export enum LOG_TYPE {
    * Warning log type, used to log warnings about potential issues.
    */
   WARNING = 'WARNING',
+
+  /**
+   * Debug log type, used for general information messages.
+   */
+  DEBUG = 'DEBUG',
 }
 
 /**

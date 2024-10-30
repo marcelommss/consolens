@@ -388,6 +388,9 @@ const logOnConsole = (
     case LOG_TYPE.ERROR:
       setTimeout(getOriginalError()?.bind(console, ...params));
       break;
+    case LOG_TYPE.DEBUG:
+      console.debug(params);
+      break;
     default:
       setTimeout(console.log.bind(console, ...params));
   }

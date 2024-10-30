@@ -114,6 +114,28 @@ const logError = (params: LogParams) => {
   });
 };
 
+/**
+ * Logs informational messages with optional metadata such as source, function name, message, and more.
+ *
+ * @param {LogParams} params - The logging parameters
+ * @param {string} [params.source] - The source file or component emitting the log
+ * @param {string} [params.functionName] - The name of the function that generated the log
+ * @param {boolean} [params.isEffect] - Whether this log is related to a side effect
+ * @param {string} [params.message] - A description of the log message
+ * @param {any[]} [params.args] - Additional arguments to be logged
+ * @param {string} [params.messageColor] - Color for the log message description
+ * @param {number} [params.line] - The line number where the log occurred
+ * @param {string} [params.context] - The context of the log
+ * @param {string[]} [params.tags] - Tags for log identification
+ */
+const logDebug = (params: LogParams) => {
+  handleLog({
+    ...params,
+    type: LOG_TYPE.DEBUG,
+    color: params.messageColor,
+  });
+};
+
 const isConsoleLogParams = (input: any): input is ConsoleLogParams => {
   return typeof input === 'object' && input !== null && 'type' in input;
 };
@@ -186,6 +208,10 @@ const logDevError = (params: LogParams) =>
   isDev() && loglens({ type: LOG_TYPE.ERROR, ...params });
 const logDevWarn = (params: LogParams) =>
   isDev() && loglens({ type: LOG_TYPE.WARNING, ...params });
+const logDevDebug = (params: LogParams) =>
+  isDev() && loglens({ type: LOG_TYPE.DEBUG, ...params });
+
+const logDevWarning = logDevWarn;
 
 /**
  * Clears the console log.
@@ -319,10 +345,13 @@ export {
   logInfo,
   logWarn,
   logWarning,
+  logDebug,
   logDev,
   logDevInfo,
   logDevError,
   logDevWarn,
+  logDevWarning,
+  logDevDebug,
   clearLog,
   logDivider,
   logHeader,
