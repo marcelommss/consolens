@@ -145,10 +145,9 @@ export function identifyMessageAndArgs(
   type?: LOG_TYPE,
   showInterceptMessage?: boolean
 ): ConsoleMessage {
-  const INTERCEPT_MESSAGE = 'Intercepted log message';
-  let message: string | undefined = showInterceptMessage
-    ? INTERCEPT_MESSAGE
-    : undefined;
+  const INTERCEPT_MESSAGE: string | undefined =
+    showInterceptMessage === true ? 'Intercepted log message' : undefined;
+  let message: string | undefined = INTERCEPT_MESSAGE;
   let restArgs: any[] | undefined = args;
   let isError: boolean = false;
 

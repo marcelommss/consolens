@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.4] - 2024-10-30  
+### Fixes
+- minor bug fix
+
 ## [1.1.3] - 2024-10-30  
 ### Fixes
 - Fixed identification from and not from middleware
