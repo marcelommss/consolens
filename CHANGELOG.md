@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.5] - 2024-12- 08
+### Fixes
+- fix commonjs support
+
 ## [1.1.4] - 2024-10-30  
 ### Fixes
 - minor bug fix

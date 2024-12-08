@@ -112,7 +112,7 @@ const createMessage = ({
   }
 
   if (message) {
-    if (spacePoints > 2)
+    if (spacePoints > 1)
       data += config.multiline || spacePoints > 4 ? '\n' : '';
     data += `\t${config.displayTitles ? '%cmessage:  ' : ''}${
       hasMessageColor ? '%c%c' : '%c'
