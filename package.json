@@ -1,6 +1,6 @@
 {
   "name": "consolens",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Enhances JavaScript console logging with structured messages, auto-tagging, contextual information, and custom icons.",
   "main": "dist/index.cjs",
   "module": "dist/index.esm.js",
@@ -10,8 +10,14 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.esm.js"
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.esm.js"
+      }
     }
   },
   "dependencies": {
