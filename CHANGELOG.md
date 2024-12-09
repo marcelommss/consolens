@@ -1,5 +1,6 @@
 # Changelog
 
+## [1.1.6] - 2024-12- 08
 ## [1.1.5] - 2024-12- 08
 ### Fixes
 - fix commonjs support

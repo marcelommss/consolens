@@ -3,7 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 
 export default {
-  input: 'src/index.ts', // Entry point
+  input: 'src/index.ts',
   output: [
     {
       file: 'dist/index.cjs',
@@ -16,12 +16,6 @@ export default {
       sourcemap: true,
     },
   ],
-  plugins: [
-    resolve(),
-    commonjs(),
-    typescript({
-      tsconfig: './tsconfig.json',
-    }),
-  ],
-  external: ['tslib'], // Prevent Rollup from bundling tslib
+  plugins: [resolve(), commonjs(), typescript({ tsconfig: './tsconfig.json' })],
+  external: ['tslib'],
 };

@@ -5,7 +5,7 @@ import { LOG_TYPE } from '../types'; // Assuming LOG_TYPE is defined in logTypes
 describe('Group functionality', () => {
   beforeEach(() => {
     // Reset the internal state before each test
-    (global as any).logGroups = [];
+    (globalThis as any).logGroups = [];
   });
 
   test('should add a message to a new top-level group', () => {

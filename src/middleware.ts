@@ -255,7 +255,7 @@ const initializeLoggingMiddleware = (): void => {
     }
   }
   // Check if running in Node.js
-  else if (typeof global !== 'undefined') {
+  else if (typeof globalThis !== 'undefined') {
     interceptConsoleLogs(); // No DOM events needed, so just initialize
   }
 };
