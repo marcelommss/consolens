@@ -1,8 +1,9 @@
 # Changelog
 
+## [1.1.8] - 2024-12- 09
 ## [1.1.7] - 2024-12- 09
 ### Fixes
-- fix exporting types
+- fix exporting types for multiple projects
 
 ## [1.1.6] - 2024-12- 08
 ## [1.1.5] - 2024-12- 08
